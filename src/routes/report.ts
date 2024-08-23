@@ -141,7 +141,7 @@ export default function (app: Express, client: Client) {
                 case "server": {
                     embedFields.push({
                         name: value,
-                        value: body.serverName,
+                        value: body.serverName ? body.serverName.replace(/<[^{}]*>/g, " ").replace(/  +/g, ' ') : "Unknown",
                     });
                 }
             }
