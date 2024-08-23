@@ -19,8 +19,7 @@ export default function (app: Express, client: Client) {
                 .execute()
                 .catch(() => [null])
         )[0]?.id;
-        if (actualClientId !== clientid)
-            return res.status(400).send("Invalid clientid provided");
+        if(!actualClientId) return res.status(400).send("Invalid clientid provided");
         const url = new URL(
             req.protocol + "://" + req.get("host") + req.originalUrl,
         );
