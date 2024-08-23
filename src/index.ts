@@ -48,7 +48,7 @@ for (const file of routeFiles) {
 
 app.get('/', (req, res) => {
     res.send(`Welcome to Friday, this page looks empty but it's not supposed to be for much. If you're looking for the source code, then you can go here <a href="https://github.com/JayXTQ/Friday">https://github.com/JayXTQ/Friday</a> to view it.
-<br><br>
+<br>
 Terms of Service:
 
 When referring to "Friday", "we", "our", "us", "the bot", "the service", "the application", "the app", "the website", "the site", "the platform", "the service", "the software", "the program", "the service", it is referring to the bot, Friday.
@@ -62,7 +62,7 @@ When using Friday, you agree to the following terms:
 4. You will not use Friday to break the terms of use of any service that the bot is integrated with, e.g. Steam, SCP: Secret Laboratory.
 
 If you break any of these terms, we reserve the right to ban you from using Friday, and we reserve the right to report you to any relating service if you broke something relating to them as well.
-<br><br>
+<br>
 Privacy Policy:
 
 Friday is open source and the database schemas are public, so you can see what we store about you. We store the following information core information:
@@ -74,7 +74,7 @@ Friday is open source and the database schemas are public, so you can see what w
 
 The rest of the information we store can be found in the schemas in the source code.
 All data used by Friday is stored by me (JayXTQ) and is not shared with anyone else. The data is stored on a PostgreSQL database hosted on my own server.
-`);
+`.replace(/\n/g, "<br>"));
 })
 
 app.listen(process.env.PORT || 3000, () => {
