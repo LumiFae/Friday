@@ -1,4 +1,4 @@
-import { Client, REST, Routes } from "discord.js";
+import { Client, REST, Routes, ActivityType } from "discord.js";
 import { commands } from "../..";
 import { readdirSync } from "fs";
 import path from "path";
@@ -59,6 +59,9 @@ export default async function (client: Client) {
         console.log(
             `Logged in as ${client.user?.tag}! Loaded ${commands.size} interactions.`,
         );
+        client.user?.setPresence({
+            activities: [{ name: "for your reports", type: ActivityType.Watching }]
+        })
         await init();
         await load();
     });

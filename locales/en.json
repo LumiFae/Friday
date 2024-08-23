@@ -13,7 +13,8 @@
         }
     },
     "connect": {
-        "returns": "This will require you to login with Steam, the only information collected from this is your Steam64ID, anything else will not be used. Click the button below to proceed. After this process, you will never need to do this again, this account will carry over to every server"
+        "returns": "This will require you to login with Steam, the only information collected from this is your Steam64ID, anything else will not be used. Click the button below to proceed. After this process, you will never need to do this again, this account will carry over to every server",
+        "error": "An error occurred while trying to connect your Steam account, please try again."
     },
     "disconnect": {
         "returns": "You have successfully disconnected your Steam account from the bot, if you wish to reconnect, use the /connect command"
