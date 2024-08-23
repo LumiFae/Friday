@@ -1,0 +1,61 @@
+{
+    "not_your_command": "This is not your command!",
+    "no_permission": "You don't have permission to use this command!",
+    "help": {
+        "button": {
+            "next": "Next Page",
+            "previous": "Previous Page"
+        },
+        "page_count": "Page {current} out of {total}",
+        "embeds": {
+            "title": "Help",
+            "description": "Here are the commands you can use with this bot."
+        }
+    },
+    "connect": {
+        "returns": "This will require you to login with Steam, the only information collected from this is your Steam64ID, anything else will not be used. Click the button below to proceed. After this process, you will never need to do this again, this account will carry over to every server"
+    },
+    "disconnect": {
+        "returns": "You have successfully disconnected your Steam account from the bot, if you wish to reconnect, use the /connect command"
+    },
+    "config": {
+        "invalid_value": "Invalid value for this option, please try again.",
+        "invalid_option": "Invalid option, please try again.",
+        "no_access_send": "I do not have permission to send messages in that channel.",
+        "no_access_create": "I do not have permission to create channels in that category.",
+        "embeds": {
+            "standard": {
+                "title": "Configuration",
+                "description": "Here are the current configuration settings for this server. Use the text inside the brackets when choosing the option to change using this command"
+            }
+        },
+        "config_option_names": {
+            "category": "Category to create tickets in (category)",
+            "log_channel": "Channel to log tickets in (log_channel)",
+            "mod_role": "Role that gets added to all tickets (mod_role)",
+            "message": "Message to send to the ticket when it is created, if the person is in the discord (message)",
+            "locale": "Language to use for the bot, per server (locale)"
+        },
+        "success": "Successfully updated the configuration for this server."
+    },
+    "setup": {
+        "already_setup": "This server has already been setup.",
+        "embeds": {
+            "title": "Setup",
+            "description": "Here is the token you will need to access the bot via our API. This is a one-time token, so make sure to save it somewhere safe, if you lose it, you will have to request support via our discord.\n`{token}`\n\nUse the /config command to edit options within the bot. Please add the above token into the config file for the Friday plugin here: https://github.com/JayXTQ/FridayPlugin/releases/latest"
+        }
+    },
+    "ticket": {
+        "default_message": "Hello {user}, thank you for reporting this user. A member of staff will be with you shortly.",
+        "default_message_no_user": "This ticket was created via the in game report system, no user was found, relevant information is below.",
+        "embeds": {
+            "title": "Ingame Report Ticket",
+            "field_names": {
+                "user": "User",
+                "reason": "Reason",
+                "reporter": "Reporter"
+            },
+            "no_user": "Not found"
+        }
+    }
+}
