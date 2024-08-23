@@ -13,7 +13,7 @@ import { DiscordFetch, embed as embed_ } from "../utils/discord";
 import { Locales, replacement } from "../locales";
 
 export default function (app: Express, client: Client) {
-    app.get("/report", async (req, res) => {
+    app.post("/report", async (req, res) => {
         const auth = req.headers.authorization;
         const body = req.body as {
             reporterName: string;
