@@ -38,6 +38,20 @@
         },
         "success": "Successfully updated the configuration for this server."
     },
+    "settings": {
+        "config_option_names": {
+            "locale": "Language to use when interacting with you (locale)"
+        },
+        "invalid_value": "Invalid value for this option, please try again.",
+        "invalid_option": "Invalid option, please try again.",
+        "embeds": {
+            "standard": {
+                "title": "Settings",
+                "description": "Here are the current settings for you. Use the text inside the brackets when choosing the option to change using this command"
+            }
+        },
+        "success": "Successfully updated your settings."
+    },
     "setup": {
         "already_setup": "This server has already been setup.",
         "embeds": {
