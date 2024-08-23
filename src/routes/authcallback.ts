@@ -6,7 +6,7 @@ import { users } from "../schema";
 import { eq } from "drizzle-orm";
 
 export default function (app: Express, client: Client) {
-    app.get("/auth/return", async (req, res) => {
+    app.get("/auth/callback", async (req, res) => {
         const clientid = req.query.clientid;
         if (!clientid) return res.status(400).send("No clientid provided");
         if (typeof clientid !== "string")
