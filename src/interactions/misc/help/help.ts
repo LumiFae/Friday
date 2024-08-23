@@ -56,6 +56,7 @@ export default {
             return await interaction.reply({
                 embeds: [embed_],
                 components: [row],
+                ephemeral: true
             });
         }
         await interaction.reply({ embeds: [embed_] });
