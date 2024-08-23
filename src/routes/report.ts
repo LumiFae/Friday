@@ -24,11 +24,12 @@ export default function (app: Express, client: Client) {
             serverName: string;
         };
         if (!auth) return res.status(400).send("No token provided");
+        const token = auth.split(" ")[1];
         const server = (
             await db
                 .select()
                 .from(servers)
-                .where(eq(servers.token, auth))
+                .where(eq(servers.token, token))
                 .execute()
                 .catch(() => [null])
         )[0];
