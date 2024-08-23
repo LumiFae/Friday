@@ -37,7 +37,7 @@ export default function (app: Express, client: Client) {
         if (!guild) return res.status(400).send("Invalid guild");
         const category = await new DiscordFetch(client).channel(server.id);
         if (!category) return res.status(400).send("Invalid category");
-        if (!(category instanceof CategoryChannel))
+        if (category.type !== 4)
             return res.status(400).send("Invalid category");
 
         let discordUserId = await getUser(body.reportedId, true);
