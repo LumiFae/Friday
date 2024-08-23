@@ -21,6 +21,7 @@ export default function (app: Express, client: Client) {
             reportedName: string;
             reportedId: string;
             reason: string;
+            serverName: string;
         };
         if (!auth) return res.status(400).send("No token provided");
         const server = (
@@ -134,6 +135,12 @@ export default function (app: Express, client: Client) {
                         value: `${body.reporterName} (${body.reporterId})\nDiscord: ${discordUserId ? `<@${discordUserId}>` : serverLocale.get((lang) => lang.ticket.embeds.no_user)}`,
                     });
                     break;
+                }
+                case "server": {
+                    embedFields.push({
+                        name: value,
+                        value: body.serverName,
+                    });
                 }
             }
         }
