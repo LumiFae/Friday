@@ -59,6 +59,6 @@ export default {
                 ephemeral: true
             });
         }
-        await interaction.reply({ embeds: [embed_] });
+        await interaction.reply({ embeds: [embed_], ephemeral: true });
     },
 } satisfies Command;
