@@ -8,7 +8,7 @@ export default {
     run: async (interaction, serverLocale, userLocale) => {
         const linkButton = new ButtonBuilder()
             .setStyle(ButtonStyle.Link)
-            .setLabel('Connect')
+            .setLabel("Connect")
             .setURL(
                 `https://u8w8ws8.apps.jayxtq.xyz/auth?clientid=${interaction.user.id}`,
             );

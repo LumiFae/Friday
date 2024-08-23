@@ -57,5 +57,39 @@
             },
             "no_user": "Not found"
         }
+    },
+    "close": {
+        "invalid_channel": "This is not a ticket channel.",
+        "closed": "Ticket has been closed by {user}, please run /delete to remove this channel.",
+        "embeds": {
+            "title": "Ticket Closed",
+            "description": "Ticket {id} has been closed by {user} for {reason}.",
+            "description_user": "Ticket {id} made by {created} has been closed by {user} for {reason}."
+        },
+        "user_closed": "Your ticket has been closed for {reason}. Here is the transcript:"
+    },
+    "delete": {
+        "invalid_channel": "Either this is not a ticket channel or this channel is not marked as closed.",
+        "deleting": "Deleting...",
+        "embeds": {
+            "title": "Ticket Deleted",
+            "description": "Ticket {id} has been deleted by {user}.",
+            "description_user": "Ticket {id} made by {created} has been deleted by {user}."
+        }
+
+    },
+    "adduser": {
+        "invalid_user": "This user is already in this channel.",
+        "embeds": {
+            "title": "User Added",
+            "description": "{user} has been added to this ticket by {mod}."
+        }
+    },
+    "removeuser": {
+        "invalid_user": "This user is not in the channel.",
+        "embeds": {
+            "title": "User Removed",
+            "description": "{user} has been removed from this ticket by {mod}."
+        }
     }
 }

@@ -1,5 +1,5 @@
 import SteamAuth from "node-steam-openid";
-import axios from 'axios'
+import axios from "axios";
 
 export async function initialiseSteam(url: URL, clientId: string) {
     const steam = new SteamAuth({
@@ -12,7 +12,7 @@ export async function initialiseSteam(url: URL, clientId: string) {
 
 export async function getPlayerSummaries(...steamIDs: string[]) {
     const response = await axios.get(
-        `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env.STEAM_KEY}&steamids=${steamIDs.join(',')}`,
+        `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${process.env.STEAM_KEY}&steamids=${steamIDs.join(",")}`,
     );
 
     type Response = {

@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import { Command } from "../../types/discord";
-import {setSteamData} from "../../db";
+import { setSteamData } from "../../db";
 
 export default {
     name: "disconnect",
