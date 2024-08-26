@@ -3,7 +3,7 @@ import { Command } from "../../types/discord";
 import { getUser } from "../../db";
 
 export default {
-    name: "connect",
+    name: "discord",
     role: "CHAT_INPUT",
     description: "Connect your Steam account to the bot",
     run: async (interaction, serverLocale, userLocale) => {
