@@ -53,18 +53,18 @@ export default {
             .setDescription(
                 !ticketChannel.created_by
                     ? replacement(
-                        serverLocale.get(
-                            (lang) => lang.delete.embeds.description,
-                        ),
-                        `<@${interaction.user.id}>`
-                    )
+                          serverLocale.get(
+                              (lang) => lang.delete.embeds.description,
+                          ),
+                          `<@${interaction.user.id}>`,
+                      )
                     : replacement(
-                        serverLocale.get(
-                            (lang) => lang.delete.embeds.description_user,
-                        ),
-                        `<@${interaction.user.id}>`,
-                        `<@${ticketChannel.created_by}>`
-                    ),
+                          serverLocale.get(
+                              (lang) => lang.delete.embeds.description_user,
+                          ),
+                          `<@${interaction.user.id}>`,
+                          `<@${ticketChannel.created_by}>`,
+                      ),
             );
         await logChannel.send({ embeds: [embed] });
     },

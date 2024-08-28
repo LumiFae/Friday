@@ -21,7 +21,7 @@ export default {
             name: "user",
             description: "The user to remove",
             required: true,
-        }
+        },
     ],
     contexts: [0],
     run: async (interaction, serverLocale, userLocale) => {
@@ -45,12 +45,37 @@ export default {
                 content: userLocale.get((lang) => lang.close.invalid_channel),
                 ephemeral: true,
             });
-        if(!ticketChannel.invitees.includes(interaction.options.getUser("user", true).id)) return interaction.reply({ content: userLocale.get((lang) => lang.removeuser.invalid_user), ephemeral: true });
-        await interaction.channel.permissionOverwrites.edit(interaction.options.getUser("user", true).id, { ViewChannel: false });
-        await db.update(tickets).set({ invitees: sql`array_remove(${tickets.invitees}, ${interaction.options.getUser("user", true).id})` }).where(eq(tickets.channelId, interaction.channelId)).execute();
+        if (
+            !ticketChannel.invitees.includes(
+                interaction.options.getUser("user", true).id,
+            )
+        )
+            return interaction.reply({
+                content: userLocale.get((lang) => lang.removeuser.invalid_user),
+                ephemeral: true,
+            });
+        await interaction.channel.permissionOverwrites.edit(
+            interaction.options.getUser("user", true).id,
+            { ViewChannel: false },
+        );
+        await db
+            .update(tickets)
+            .set({
+                invitees: sql`array_remove(${tickets.invitees}, ${interaction.options.getUser("user", true).id})`,
+            })
+            .where(eq(tickets.channelId, interaction.channelId))
+            .execute();
         const embed = embed_()
             .setTitle(serverLocale.get((lang) => lang.removeuser.embeds.title))
-            .setDescription(replacement(serverLocale.get((lang) => lang.removeuser.embeds.description), `<@${interaction.options.getUser("user", true).id}>`, `<@${interaction.user.id}>`));
-        await interaction.reply({ embeds: [embed] })
+            .setDescription(
+                replacement(
+                    serverLocale.get(
+                        (lang) => lang.removeuser.embeds.description,
+                    ),
+                    `<@${interaction.options.getUser("user", true).id}>`,
+                    `<@${interaction.user.id}>`,
+                ),
+            );
+        await interaction.reply({ embeds: [embed] });
     },
 } satisfies Command;

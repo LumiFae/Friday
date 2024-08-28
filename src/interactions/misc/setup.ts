@@ -38,8 +38,8 @@ export default {
                 ephemeral: true,
             });
         }
-        let token = await generateToken(interaction.guildId)
-        while(token === null) token = await generateToken(interaction.guildId);
+        let token = await generateToken(interaction.guildId);
+        while (token === null) token = await generateToken(interaction.guildId);
         const embed = embed_()
             .setTitle(userLocale.get((lang) => lang.setup.embeds.title))
             .setDescription(
@@ -57,18 +57,21 @@ export default {
 } satisfies Command;
 
 async function generateToken(guild: string) {
-    const returned = (await db
-        .insert(servers)
-        .values({
-            id: guild,
-            token: generateRandomString(20),
-        })
-        .onConflictDoUpdate({
-            target: servers.id,
-            set: { token: generateRandomString(20) },
-        })
-        .returning({ token: servers.token })
-        .execute().catch(() => [null]))[0];
-    if(!returned) return null;
+    const returned = (
+        await db
+            .insert(servers)
+            .values({
+                id: guild,
+                token: generateRandomString(20),
+            })
+            .onConflictDoUpdate({
+                target: servers.id,
+                set: { token: generateRandomString(20) },
+            })
+            .returning({ token: servers.token })
+            .execute()
+            .catch(() => [null])
+    )[0];
+    if (!returned) return null;
     return returned.token;
 }

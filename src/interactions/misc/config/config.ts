@@ -1,17 +1,13 @@
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    PermissionsBitField,
     PermissionFlagsBits,
     CategoryChannel,
 } from "discord.js";
 import { Command } from "../../../types/discord";
 import { DiscordFetch, embed } from "../../../utils/discord";
-import { Locales } from "../../../locales";
-import { db } from "../../../db";
+import { haveLocale, Locales } from "../../../locales";
+import { db, getServer } from "../../../db";
 import { servers } from "../../../schema";
-import { languages } from "../../../locales";
+import { languages, formatLocale } from "../../../locales";
 import type { Languages } from "../../../schema";
 
 export default {
@@ -37,6 +33,17 @@ export default {
         if (!interaction.guildId) return;
         const option = interaction.options.getString("option");
         const value = interaction.options.getString("value");
+        const server = (await getServer(interaction.guildId)) ?? {
+            category: null,
+            log_channel: null,
+            mod_role: null,
+            message: null,
+            locale: haveLocale(formatLocale(interaction.guildLocale)) ? formatLocale(interaction.guildLocale) : "en",
+        };
+        const configOptionNames = userLocale.getObject(
+            (lang) => lang.config.config_option_names,
+        );
+        const keys = Object.keys(configOptionNames);
         const standard = embed()
             .setTitle(
                 userLocale.get((lang) => lang.config.embeds.standard.title),
@@ -47,11 +54,17 @@ export default {
                 ),
             )
             .addFields(
-                Object.values(
-                    userLocale.getObject(
-                        (lang) => lang.config.config_option_names,
-                    ),
-                ).map(([key, value]) => ({ name: key, value, inline: true })),
+                keys.map((key) => ({
+                    name: configOptionNames[key],
+                    value: server[key]
+                        ? key === "category" || key === "log_channel"
+                            ? `<#${server[key]}>`
+                            : key === "mod_role"
+                              ? `<@&${server[key]}>`
+                              : server[key]
+                        : "Not Set",
+                    inline: true,
+                })),
             );
         if (!option || !value) {
             return await interaction.reply({ embeds: [standard] });

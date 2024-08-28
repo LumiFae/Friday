@@ -13,6 +13,11 @@ export async function load() {
     }
 }
 
+export function haveLocale(locale: string | null): boolean {
+    if (!locale) return false;
+    return !!languages[locale];
+}
+
 export class Locales {
     lang: string;
     langFile: typeof en;
@@ -35,4 +40,11 @@ export class Locales {
 export function replacement(string: string, ...replacements: string[]): string {
     let index = 0;
     return string.replace(/{[^{}]*}/g, () => replacements[index++] || "");
+}
+
+export function formatLocale(locale: string | null){
+    if(!locale) return null;
+    const localeArray = locale.split("-");
+    if(localeArray[0] === 'en') return 'en';
+    return locale;
 }

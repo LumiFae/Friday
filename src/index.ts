@@ -46,8 +46,9 @@ for (const file of routeFiles) {
     });
 }
 
-app.get('/', (req, res) => {
-    res.send(`Welcome to Friday, this page looks empty but it's not supposed to be for much. If you're looking for the source code, then you can go here <a href="https://github.com/JayXTQ/Friday">https://github.com/JayXTQ/Friday</a> to view it.
+app.get("/", (req, res) => {
+    res.send(
+        `Welcome to Friday, this page looks empty but it's not supposed to be for much. If you're looking for the source code, then you can go here <a href="https://github.com/JayXTQ/Friday">https://github.com/JayXTQ/Friday</a> to view it.
 <br>
 Terms of Service:
 
@@ -74,8 +75,9 @@ Friday is open source and the database schemas are public, so you can see what w
 
 The rest of the information we store can be found in the schemas in the source code.
 All data used by Friday is stored by me (JayXTQ) and is not shared with anyone else. The data is stored on a PostgreSQL database hosted on my own server.
-`.replace(/\n/g, "<br>"));
-})
+`.replace(/\n/g, "<br>"),
+    );
+});
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server listening on port ${process.env.PORT || 3000}`);

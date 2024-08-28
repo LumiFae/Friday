@@ -60,8 +60,10 @@ export default async function (client: Client) {
             `Logged in as ${client.user?.tag}! Loaded ${commands.size} interactions.`,
         );
         client.user?.setPresence({
-            activities: [{ name: "for your reports", type: ActivityType.Watching }]
-        })
+            activities: [
+                { name: "for your reports", type: ActivityType.Watching },
+            ],
+        });
         await init();
         await load();
     });

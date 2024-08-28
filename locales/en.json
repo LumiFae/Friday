@@ -91,7 +91,6 @@
             "description": "Ticket {id} has been deleted by {user}.",
             "description_user": "Ticket {id} made by {created} has been deleted by {user}."
         }
-
     },
     "adduser": {
         "invalid_user": "This user is already in this channel.",

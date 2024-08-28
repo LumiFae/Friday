@@ -1,10 +1,11 @@
 import { Client, Interaction } from "discord.js";
 import { commands } from "../..";
-import { Locales } from "../../locales";
+import { Locales, formatLocale } from "../../locales";
 import { db, getLocale } from "../../db";
 
 export default async function (client: Client) {
     client.on("interactionCreate", async (interaction) => {
+        console.log(interaction.locale, interaction.guildLocale);
         let finder: string;
         if (!("commandName" in interaction)) {
             finder = interaction.customId;
@@ -16,10 +17,10 @@ export default async function (client: Client) {
         if (!command) return;
         console.log(`Executing interaction ${finder}...`);
         const serverLocale = new Locales(
-            await getLocale(interaction.guildId, true),
+            await getLocale(interaction.guildId, true) ?? formatLocale(interaction.guildLocale ?? 'en'),
         );
         const userLocale = new Locales(
-            await getLocale(interaction.user.id, false),
+            await getLocale(interaction.user.id, false) ?? formatLocale(interaction.locale ?? 'en'),
         );
         try {
             await (

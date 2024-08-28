@@ -8,10 +8,11 @@ export default {
     description: "Connect your Steam account to the bot",
     run: async (interaction, serverLocale, userLocale) => {
         const user = await getUser(interaction.user.id);
-        if(!user) return await interaction.reply({
-            content: userLocale.get((lang) => lang.connect.error),
-            ephemeral: true,
-        });
+        if (!user)
+            return await interaction.reply({
+                content: userLocale.get((lang) => lang.connect.error),
+                ephemeral: true,
+            });
         const linkButton = new ButtonBuilder()
             .setStyle(ButtonStyle.Link)
             .setLabel("Connect")
