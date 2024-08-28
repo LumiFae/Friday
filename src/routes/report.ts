@@ -36,8 +36,10 @@ export default function (app: Express, client: Client) {
         if (!server) return res.status(401).send("Invalid token");
         const guild = await new DiscordFetch(client).guild(server.id);
         if (!guild) return res.status(400).send("Invalid guild");
-        if(!server.category) return res.status(400).send("No category set");
-        const category = await new DiscordFetch(client).channel(server.category);
+        if (!server.category) return res.status(400).send("No category set");
+        const category = await new DiscordFetch(client).channel(
+            server.category,
+        );
         if (!category) return res.status(400).send("Invalid category");
         if (category.type !== 4)
             return res.status(400).send("Invalid category");
@@ -141,7 +143,11 @@ export default function (app: Express, client: Client) {
                 case "server": {
                     embedFields.push({
                         name: value,
-                        value: body.serverName ? body.serverName.replace(/<[^{}]*>/g, " ").replace(/  +/g, ' ') : "Unknown",
+                        value: body.serverName
+                            ? body.serverName
+                                  .replace(/<[^{}]*>/g, " ")
+                                  .replace(/  +/g, " ")
+                            : "Unknown",
                     });
                 }
             }
@@ -164,7 +170,9 @@ export default function (app: Express, client: Client) {
             embeds: [embed],
         });
 
-        res.status(200).send(`Report created under #ticket-${makeNumber4Chars(ticketInfo.id)}`);
+        res.status(200).send(
+            `Report created under #ticket-${makeNumber4Chars(ticketInfo.id)}`,
+        );
     });
 }
 

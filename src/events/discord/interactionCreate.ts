@@ -17,10 +17,12 @@ export default async function (client: Client) {
         if (!command) return;
         console.log(`Executing interaction ${finder}...`);
         const serverLocale = new Locales(
-            await getLocale(interaction.guildId, true) ?? formatLocale(interaction.guildLocale ?? 'en'),
+            (await getLocale(interaction.guildId, true)) ??
+                formatLocale(interaction.guildLocale ?? "en"),
         );
         const userLocale = new Locales(
-            await getLocale(interaction.user.id, false) ?? formatLocale(interaction.locale ?? 'en'),
+            (await getLocale(interaction.user.id, false)) ??
+                formatLocale(interaction.locale ?? "en"),
         );
         try {
             await (

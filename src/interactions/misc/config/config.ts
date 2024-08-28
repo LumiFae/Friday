@@ -1,7 +1,4 @@
-import {
-    PermissionFlagsBits,
-    CategoryChannel,
-} from "discord.js";
+import { PermissionFlagsBits, CategoryChannel } from "discord.js";
 import { Command } from "../../../types/discord";
 import { DiscordFetch, embed } from "../../../utils/discord";
 import { haveLocale, Locales } from "../../../locales";
@@ -38,7 +35,9 @@ export default {
             log_channel: null,
             mod_role: null,
             message: null,
-            locale: haveLocale(formatLocale(interaction.guildLocale)) ? formatLocale(interaction.guildLocale) : "en",
+            locale: haveLocale(formatLocale(interaction.guildLocale))
+                ? formatLocale(interaction.guildLocale)
+                : "en",
         };
         const configOptionNames = userLocale.getObject(
             (lang) => lang.config.config_option_names,

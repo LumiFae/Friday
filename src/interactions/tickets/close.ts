@@ -85,7 +85,7 @@ export default {
                     content: replacement(
                         userLocale_.get((lang) => lang.close.user_closed),
                         interaction.options.getString("reason") ||
-                            "None Provided",
+                            userLocale_.get((lang) => lang.close.no_reason),
                     ),
                     files: [attachment],
                 });
@@ -116,7 +116,7 @@ export default {
                           `<@${interaction.user.id}>`,
                           `<@${ticketChannel.created_by}>`,
                           interaction.options.getString("reason") ||
-                              "None Provided",
+                              serverLocale.get((lang) => lang.close.no_reason),
                       ),
             );
         await logChannel.send({ embeds: [embed], files: [attachment] });

@@ -24,7 +24,13 @@ export default {
                 await interaction.respond(
                     keys
                         .filter((key) => key.startsWith(option.value))
-                        .map((lang) => ({ name: lang === 'category' ? 'category (use id)' : lang, value: lang })),
+                        .map((lang) => ({
+                            name:
+                                lang === "category"
+                                    ? "category (use id)"
+                                    : lang,
+                            value: lang,
+                        })),
                 );
             }
         }

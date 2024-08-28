@@ -82,7 +82,8 @@
             "description": "Ticket {id} has been closed by {user} for {reason}.",
             "description_user": "Ticket {id} made by {created} has been closed by {user} for {reason}."
         },
-        "user_closed": "Your ticket has been closed for {reason}. Here is the transcript:"
+        "user_closed": "Your ticket has been closed for {reason}. Here is the transcript:",
+        "no_reason": "None provided"
     },
     "delete": {
         "invalid_channel": "Either this is not a ticket channel or this channel is not marked as closed.",

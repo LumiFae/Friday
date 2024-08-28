@@ -4,7 +4,8 @@ Welcome to Friday, the global Discord bot that allows users to connect their Ste
 and communicate with online game servers to be able to make tickets from an in-game report.
 
 ### Supported Games
-- SCP: Secret Laboratory
+
+-   SCP: Secret Laboratory
 
 More in the future, check out our [Discord](https://discord.gg/uZaTYww7hN) for more information and to be able to make suggestions!
 

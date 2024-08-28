@@ -1,7 +1,4 @@
-import {
-    ButtonStyle,
-    PermissionFlagsBits,
-} from "discord.js";
+import { ButtonStyle, PermissionFlagsBits } from "discord.js";
 import { Command } from "../../../types/discord";
 import { DiscordFetch, embed } from "../../../utils/discord";
 import { formatLocale, haveLocale, Locales } from "../../../locales";
@@ -30,12 +27,14 @@ export default {
     run: async (interaction, serverLocale, userLocale) => {
         const option = interaction.options.getString("option");
         const value = interaction.options.getString("value");
-        const user = await getUser(interaction.user.id) || {
-            locale: haveLocale(formatLocale(interaction.locale)) ? formatLocale(interaction.locale) : "en"
+        const user = (await getUser(interaction.user.id)) || {
+            locale: haveLocale(formatLocale(interaction.locale))
+                ? formatLocale(interaction.locale)
+                : "en",
         };
         const configOptionNames = userLocale.getObject(
             (lang) => lang.settings.config_option_names,
-        )
+        );
         const standard = embed()
             .setTitle(
                 userLocale.get((lang) => lang.settings.embeds.standard.title),
@@ -46,9 +45,11 @@ export default {
                 ),
             )
             .addFields(
-                Object.keys(
-                    configOptionNames,
-                ).map((key) => ({ name: configOptionNames[key], value: user[key] || 'Not Set', inline: true })),
+                Object.keys(configOptionNames).map((key) => ({
+                    name: configOptionNames[key],
+                    value: user[key] || "Not Set",
+                    inline: true,
+                })),
             );
         if (!option || !value) {
             return await interaction.reply({ embeds: [standard] });

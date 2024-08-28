@@ -25,8 +25,20 @@ export async function setSteamData(steamid: string | null, clientid: string) {
 
 export async function getUser(id: string, steam = false) {
     const whereQuery = steam ? eq(users.steamid, id) : eq(users.id, id);
-    let record = await db.query.users.findFirst({ where: whereQuery }).execute().catch(() => null) || null;
-    if(!record && !steam) record = (await db.insert(users).values({ id }).returning().execute().catch(() => [null]))[0];
+    let record =
+        (await db.query.users
+            .findFirst({ where: whereQuery })
+            .execute()
+            .catch(() => null)) || null;
+    if (!record && !steam)
+        record = (
+            await db
+                .insert(users)
+                .values({ id })
+                .returning()
+                .execute()
+                .catch(() => [null])
+        )[0];
     return record;
 }
 
@@ -42,8 +54,8 @@ export async function getServer(id: string) {
 }
 
 export async function getLocale(id: string | null, server: boolean) {
-    if (!id) return "en";
+    if (!id) return null;
     const record = server ? await getServer(id) : await getUser(id);
-    if (!record) return "en";
+    if (!record) return null;
     return record.locale;
 }

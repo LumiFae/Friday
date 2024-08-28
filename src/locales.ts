@@ -42,9 +42,9 @@ export function replacement(string: string, ...replacements: string[]): string {
     return string.replace(/{[^{}]*}/g, () => replacements[index++] || "");
 }
 
-export function formatLocale(locale: string | null){
-    if(!locale) return null;
+export function formatLocale(locale: string | null) {
+    if (!locale) return null;
     const localeArray = locale.split("-");
-    if(localeArray[0] === 'en') return 'en';
+    if (localeArray[0] === "en") return "en";
     return locale;
 }
