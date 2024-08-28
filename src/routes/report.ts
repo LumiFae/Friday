@@ -13,7 +13,7 @@ import { DiscordFetch, embed as embed_ } from "../utils/discord";
 import { Locales, replacement } from "../locales";
 
 export default function (app: Express, client: Client) {
-    app.get("/report", async (req, res) => {
+    app.post("/report", async (req, res) => {
         const auth = req.headers.authorization;
         const body = req.body as {
             reporterName: string;
@@ -21,22 +21,25 @@ export default function (app: Express, client: Client) {
             reportedName: string;
             reportedId: string;
             reason: string;
+            serverName: string;
         };
         if (!auth) return res.status(400).send("No token provided");
+        const token = auth.split(" ")[1];
         const server = (
             await db
                 .select()
                 .from(servers)
-                .where(eq(servers.token, auth))
+                .where(eq(servers.token, token))
                 .execute()
                 .catch(() => [null])
         )[0];
         if (!server) return res.status(401).send("Invalid token");
         const guild = await new DiscordFetch(client).guild(server.id);
         if (!guild) return res.status(400).send("Invalid guild");
-        const category = await new DiscordFetch(client).channel(server.id);
+        if(!server.category) return res.status(400).send("No category set");
+        const category = await new DiscordFetch(client).channel(server.category);
         if (!category) return res.status(400).send("Invalid category");
-        if (!(category instanceof CategoryChannel))
+        if (category.type !== 4)
             return res.status(400).send("Invalid category");
 
         let discordUserId = await getUser(body.reportedId, true);
@@ -135,6 +138,12 @@ export default function (app: Express, client: Client) {
                     });
                     break;
                 }
+                case "server": {
+                    embedFields.push({
+                        name: value,
+                        value: body.serverName ? body.serverName.replace(/<[^{}]*>/g, " ").replace(/  +/g, ' ') : "Unknown",
+                    });
+                }
             }
         }
         embed.addFields(embedFields);
@@ -154,6 +163,8 @@ export default function (app: Express, client: Client) {
                   ),
             embeds: [embed],
         });
+
+        res.status(200).send(`Report created under #ticket-${makeNumber4Chars(ticketInfo.id)}`);
     });
 }
 

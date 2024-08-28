@@ -68,7 +68,8 @@
             "field_names": {
                 "user": "User",
                 "reason": "Reason",
-                "reporter": "Reporter"
+                "reporter": "Reporter",
+                "server": "Server Name"
             },
             "no_user": "Not found"
         }

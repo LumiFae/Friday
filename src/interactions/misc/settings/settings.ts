@@ -82,6 +82,7 @@ export default {
                         target: servers.id,
                         set: { locale: valueTyped },
                     });
+                break;
             }
         }
         await interaction.reply({

@@ -71,7 +71,7 @@ export default {
         }
         const englishLocale = new Locales();
         if (
-            Object.keys(
+            !Object.keys(
                 englishLocale.getObject(
                     (lang) => lang.config.config_option_names,
                 ),
@@ -83,11 +83,11 @@ export default {
         }
         switch (option) {
             case "category": {
-                const category = value.replace("<#", "").replace(">", "");
+                const category = value;
                 const channel = await new DiscordFetch(
                     interaction.client,
                 ).channel(category);
-                if (!channel || !(channel instanceof CategoryChannel)) {
+                if (!channel || channel.type !== 4) {
                     return await interaction.reply({
                         content: userLocale.get(
                             (lang) => lang.config.invalid_value,
@@ -112,6 +112,7 @@ export default {
                         target: servers.id,
                         set: { category },
                     });
+                break;
             }
             case "log_channel": {
                 const logChannel = value.replace("<#", "").replace(">", "");
@@ -146,6 +147,7 @@ export default {
                         target: servers.id,
                         set: { log_channel: logChannel },
                     });
+                break;
             }
             case "mod_role": {
                 const role = value.replace("<@&", "").replace(">", "");
@@ -167,6 +169,7 @@ export default {
                         target: servers.id,
                         set: { mod_role: role },
                     });
+                break;
             }
             case "message": {
                 await db
@@ -176,6 +179,7 @@ export default {
                         target: servers.id,
                         set: { message: value },
                     });
+                break;
             }
             case "locale": {
                 if (!Object.keys(languages).includes(value)) {
@@ -193,6 +197,7 @@ export default {
                         target: servers.id,
                         set: { locale: valueTyped },
                     });
+                break;
             }
         }
         await interaction.reply({
