@@ -59,6 +59,7 @@ export default function (app: Express, client: Client) {
                 .values({
                     created_by: discordUserId?.id || null,
                     server: server.id,
+                    steamid: body.reporterId,
                 })
                 .returning()
                 .execute()
@@ -170,8 +171,11 @@ export default function (app: Express, client: Client) {
             embeds: [embed],
         });
 
-        res.status(200).send(
-            `#ticket-${makeNumber4Chars(ticketInfo.id)}`,
+        res.status(200).json(
+            {
+                name: channel.name,
+                inDiscord: !!discordUserId,
+            },
         );
     });
 }

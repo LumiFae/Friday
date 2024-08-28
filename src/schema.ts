@@ -23,6 +23,7 @@ export const servers = pgTable("servers", {
 export const tickets = pgTable("tickets", {
     id: serial("id").primaryKey(),
     created_by: text("created_by"),
+    steamid: text("steamid").notNull(),
     server: text("server").references(() => servers.id),
     invitees: text("invitees")
         .array()

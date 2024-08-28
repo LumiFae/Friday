@@ -107,5 +107,8 @@
             "title": "User Removed",
             "description": "{user} has been removed from this ticket by {mod}."
         }
+    },
+    "authcallback": {
+        "claimed": "The owner of this ticket, {user} ({steamid}), has authenticated their account with the bot and therefore has been given access to this ticket."
     }
 }
