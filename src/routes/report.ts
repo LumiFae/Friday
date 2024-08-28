@@ -171,7 +171,7 @@ export default function (app: Express, client: Client) {
         });
 
         res.status(200).send(
-            `Report created under #ticket-${makeNumber4Chars(ticketInfo.id)}`,
+            `#ticket-${makeNumber4Chars(ticketInfo.id)}`,
         );
     });
 }
