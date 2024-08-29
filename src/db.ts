@@ -23,7 +23,14 @@ export async function setSteamData(steamid: string | null, clientid: string) {
         });
 }
 
-export async function getUser(id: string, steam = false) {
+export type User = {
+    id: string;
+    steamid: string | null;
+    locale: schema.Languages;
+    secondary_id: string;
+};
+
+export async function getUser(id: string, steam = false): Promise<User | null> {
     const whereQuery = steam ? eq(users.steamid, id) : eq(users.id, id);
     let record =
         (await db.query.users

@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import { Express } from "express";
 import { initialiseSteam } from "../utils/steam";
-import { db, getUser } from "../db";
+import { db, getUser, User } from "../db";
 import { servers, tickets } from "../schema";
 import { eq } from "drizzle-orm";
 import { DiscordFetch, embed as embed_ } from "../utils/discord";
@@ -22,6 +22,7 @@ export default function (app: Express, client: Client) {
             reportedId: string;
             reason: string;
             serverName: string;
+            serverType: number | undefined;
         };
         if (!auth) return res.status(400).send("No token provided");
         const token = auth.split(" ")[1];
@@ -44,7 +45,22 @@ export default function (app: Express, client: Client) {
         if (category.type !== 4)
             return res.status(400).send("Invalid category");
 
-        let discordUserId = await getUser(body.reportedId, true);
+        let discordUserId: User | null = null;
+
+        if(body.serverType === undefined) body.serverType = 0;
+
+        switch(body.serverType) {
+            case 0: {
+                const reporterIdSplit = body.reporterId.split("@")
+                const type = reporterIdSplit[1]
+                if(type === "discord") {
+                    discordUserId = await getUser(reporterIdSplit[0]);
+                } else if (type === "steam") {
+                    discordUserId = await getUser(reporterIdSplit[0], true);
+                }
+                break;
+            }
+        }
         if (
             discordUserId &&
             !(await new DiscordFetch(client).member(
