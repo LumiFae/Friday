@@ -160,7 +160,9 @@ async function generateTranscript(channel: TextChannel) {
 
         let out = `${author.tag} (${timestamp}): ${content}`;
         if (attachments.size) {
-            out += attachments.map((attachment) => "\n" + attachment.url).join("");
+            out += attachments
+                .map((attachment) => "\n" + attachment.url)
+                .join("");
         }
         return out;
     });

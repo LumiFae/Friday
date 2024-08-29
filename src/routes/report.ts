@@ -11,6 +11,7 @@ import { servers, tickets } from "../schema";
 import { eq } from "drizzle-orm";
 import { DiscordFetch, embed as embed_ } from "../utils/discord";
 import { Locales, replacement } from "../locales";
+import ids from '../../ids.json';
 
 export default function (app: Express, client: Client) {
     app.post("/report", async (req, res) => {
@@ -47,16 +48,20 @@ export default function (app: Express, client: Client) {
 
         let discordUserId: User | null = null;
 
-        if(body.serverType === undefined) body.serverType = 0;
+        if (body.serverType === undefined) body.serverType = 0;
 
-        switch(body.serverType) {
+        switch (body.serverType) {
             case 0: {
-                const reporterIdSplit = body.reporterId.split("@")
-                const type = reporterIdSplit[1]
-                if(type === "discord") {
+                const reporterIdSplit = body.reporterId.split("@");
+                const type = reporterIdSplit[1];
+                if (type === "discord") {
                     discordUserId = await getUser(reporterIdSplit[0]);
                 } else if (type === "steam") {
                     discordUserId = await getUser(reporterIdSplit[0], true);
+                } else if (type === "northwood") {
+                    if(ids[body.reporterId]) {
+                        discordUserId = await getUser(ids[body.reporterId]);
+                    }
                 }
                 break;
             }
@@ -187,12 +192,10 @@ export default function (app: Express, client: Client) {
             embeds: [embed],
         });
 
-        res.status(200).json(
-            {
-                name: channel.name,
-                inDiscord: !!discordUserId,
-            },
-        );
+        res.status(200).json({
+            name: channel.name,
+            inDiscord: !!discordUserId,
+        });
     });
 }
 

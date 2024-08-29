@@ -30,13 +30,39 @@ export default function (app: Express, client: Client) {
         const data = await steam.authenticate(req);
         const steamid = data.steamid;
         await setSteamData(steamid, actualClientId);
-        const tickets = await db.select().from(ticketSchema).where(eq(ticketSchema.steamid, steamid)).execute().catch(() => []);
+        const tickets = await db
+            .select()
+            .from(ticketSchema)
+            .where(eq(ticketSchema.steamid, steamid))
+            .execute()
+            .catch(() => []);
         for (const ticket of tickets) {
-            await db.update(ticketSchema).set({ created_by: actualClientId }).where(eq(ticketSchema.id, ticket.id)).execute();
-            const channel = await new DiscordFetch(client).channel(ticket.channelId as string);
-            if (!channel || !channel.isTextBased() || !(channel instanceof BaseGuildTextChannel)) continue;
-            await channel.permissionOverwrites.create(actualClientId, { ViewChannel: true });
-            await channel.send(replacement(new Locales(await getLocale(ticket.server, true)).get((lang) => lang.authcallback.claimed), `<@${actualClientId}>`, ticket.steamid));
+            await db
+                .update(ticketSchema)
+                .set({ created_by: actualClientId })
+                .where(eq(ticketSchema.id, ticket.id))
+                .execute();
+            const channel = await new DiscordFetch(client).channel(
+                ticket.channelId as string,
+            );
+            if (
+                !channel ||
+                !channel.isTextBased() ||
+                !(channel instanceof BaseGuildTextChannel)
+            )
+                continue;
+            await channel.permissionOverwrites.create(actualClientId, {
+                ViewChannel: true,
+            });
+            await channel.send(
+                replacement(
+                    new Locales(await getLocale(ticket.server, true)).get(
+                        (lang) => lang.authcallback.claimed,
+                    ),
+                    `<@${actualClientId}>`,
+                    ticket.steamid,
+                ),
+            );
         }
         return res
             .status(200)
