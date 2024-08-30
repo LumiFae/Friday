@@ -116,5 +116,8 @@
         "footer": "User ID: {id}",
         "other_connections": "Other Connections",
         "no_connections": "No other connections"
+    },
+    "guildjoin": {
+        "claimed": "The owner of this ticket, {user} ({steamid}), has joined the discord and therefore has been given access to this ticket."
     }
 }
