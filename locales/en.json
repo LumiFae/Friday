@@ -113,6 +113,8 @@
     },
     "profile": {
         "no_steam": "Not connected",
-        "footer": "User ID: {id}"
+        "footer": "User ID: {id}",
+        "other_connections": "Other Connections",
+        "no_connections": "No other connections"
     }
 }

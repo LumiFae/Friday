@@ -4,6 +4,7 @@ import { getUser } from "../../db";
 import { DiscordFetch, embed as embed_ } from "../../utils/discord";
 import { getPlayerSummaries } from "../../utils/steam";
 import { replacement } from "../../locales";
+import ids from "../../../ids.json"
 
 export default {
     name: "profile",
@@ -26,6 +27,9 @@ export default {
         const userDb = await getUser(user.id);
 
         const steamData = userDb?.steamid ? (await getPlayerSummaries(userDb.steamid))[0] : null;
+        const otherConnections: string[] = Object.entries(ids)
+            .map(([key, value]) => value === user.id ? key : undefined)
+            .filter((value): value is string => value !== undefined);
 
         const embed = embed_()
             .setAuthor({ name: generateEmoji(member.presence?.status || 'offline') + user.tag, url: member.avatarURL() || user.avatarURL() || undefined })
@@ -34,6 +38,10 @@ export default {
                 {
                     name: 'Steam',
                     value: !!steamData ? `(${steamData.personaname})[${steamData.profileurl}]` : userLocale.get((lang) => lang.profile.no_steam),
+                },
+                {
+                    name: userLocale.get((lang) => lang.profile.other_connections),
+                    value: otherConnections.length ? otherConnections.join(', ') : userLocale.get((lang) => lang.profile.no_connections),
                 }
             ])
             .setFooter({ text: replacement(userLocale.get((lang) => lang.profile.footer), user.id) });
