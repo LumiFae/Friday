@@ -110,5 +110,9 @@
     },
     "authcallback": {
         "claimed": "The owner of this ticket, {user} ({steamid}), has authenticated their account with the bot and therefore has been given access to this ticket."
+    },
+    "profile": {
+        "no_steam": "Not connected",
+        "footer": "User ID: {id}"
     }
 }
