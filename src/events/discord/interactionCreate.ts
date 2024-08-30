@@ -5,7 +5,6 @@ import { db, getLocale } from "../../db";
 
 export default async function (client: Client) {
     client.on("interactionCreate", async (interaction) => {
-        console.log(interaction.locale, interaction.guildLocale);
         let finder: string;
         if (!("commandName" in interaction)) {
             finder = interaction.customId;
