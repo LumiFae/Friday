@@ -32,7 +32,7 @@ export default {
             .filter((value): value is string => value !== undefined);
 
         const embed = embed_()
-            .setAuthor({ name: generateEmoji(member.presence?.status || 'offline') + user.tag, url: member.avatarURL() || user.avatarURL() || undefined })
+            .setAuthor({ name: `${generateEmoji(member.presence?.status || 'offline')} ${user.tag}`, url: member.avatarURL() || user.avatarURL() || undefined })
             .setThumbnail(member.avatarURL() || user.avatarURL() || 'https://archive.org/download/discordprofilepictures/discordblue.png')
             .addFields([
                 {
