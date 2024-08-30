@@ -33,11 +33,11 @@ export default {
 
         const embed = embed_()
             .setAuthor({ name: generateEmoji(member.presence?.status || 'offline') + user.tag, url: member.avatarURL() || user.avatarURL() || undefined })
-            .setImage(member.avatarURL() || user.avatarURL() || 'https://archive.org/download/discordprofilepictures/discordblue.png')
+            .setThumbnail(member.avatarURL() || user.avatarURL() || 'https://archive.org/download/discordprofilepictures/discordblue.png')
             .addFields([
                 {
                     name: 'Steam',
-                    value: !!steamData ? `(${steamData.personaname})[${steamData.profileurl}]` : userLocale.get((lang) => lang.profile.no_steam),
+                    value: !!steamData ? `[${steamData.personaname}](${steamData.profileurl})` : userLocale.get((lang) => lang.profile.no_steam),
                 },
                 {
                     name: userLocale.get((lang) => lang.profile.other_connections),
