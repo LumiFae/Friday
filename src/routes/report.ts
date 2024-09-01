@@ -184,7 +184,7 @@ export default function (app: Express, client: Client) {
 
         let content = "";
         if(discordUserId) {
-            content += `<@${discordUserId.id}>`;
+            content += `<@${discordUserId.id}>\n`;
             if(server.message) content += server.message;
             else content += serverLocale.get((lang) => lang.ticket.default_message);
         } else {
