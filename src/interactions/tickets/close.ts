@@ -58,7 +58,7 @@ export default {
         });
 
         await interaction.editReply({
-            content: userLocale.get((lang) => lang.close.closed),
+            content: replacement(userLocale.get((lang) => lang.close.closed), `<@${interaction.user.id}>`),
         });
 
         await db

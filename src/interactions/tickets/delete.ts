@@ -20,23 +20,18 @@ export default {
         if (!interaction.guildId || !interaction.channel) return;
         const server = await getServer(interaction.guildId);
         if (!server) return;
-        const ticketChannel = (
-            await db
-                .select()
-                .from(tickets)
-                .where(eq(tickets.channelId, interaction.channelId))
-                .execute()
-                .catch(() => [null])
-        )[0];
+        const ticketChannel = await db.query.tickets.findFirst({ where: eq(tickets.channelId, interaction.channelId) }).execute().catch(() => undefined);
         if (
             !ticketChannel ||
             ticketChannel.closed !== false ||
             !(interaction.channel instanceof TextChannel)
-        )
+        ) {
+            console.log(ticketChannel);
             return interaction.reply({
                 content: userLocale.get((lang) => lang.delete.invalid_channel),
                 ephemeral: true,
             });
+        }
         await interaction.reply(userLocale.get((lang) => lang.delete.deleting));
         await interaction.channel.delete();
         await db
