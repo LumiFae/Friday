@@ -156,6 +156,7 @@ async function generateTranscript(channel: TextChannel) {
     const transcript = messages.map((message) => {
         const author = message.author;
         const content = message.content;
+        if(!content) return null;
         const attachments = message.attachments;
         const timestamp = readableTime(message.createdTimestamp);
 
@@ -165,8 +166,9 @@ async function generateTranscript(channel: TextChannel) {
                 .map((attachment) => "\n" + attachment.url)
                 .join("");
         }
+        if(transcript.includes(out)) return null;
         return out;
-    });
+    }).filter((message) => message !== null) as string[];
     return transcript.join("\n\n");
 }
 
