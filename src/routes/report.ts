@@ -25,6 +25,7 @@ export default function (app: Express, client: Client) {
             serverName: string;
             serverType: number | undefined;
         };
+        console.log(`Received report: ${JSON.stringify(body)}`);
         if (!auth) return res.status(400).send("No token provided");
         const token = auth.split(" ")[1];
         const server = await db.query.servers.findFirst({ where: eq(servers.token, token) }).execute().catch(() => undefined);
@@ -163,7 +164,7 @@ export default function (app: Express, client: Client) {
                 case "reporter": {
                     embedFields.push({
                         name: value,
-                        value: `${body.reporterName} (${body.reporterId})\nDiscord: ${discordUserId ? `<@${discordUserId}>` : serverLocale.get((lang) => lang.ticket.embeds.no_user)}`,
+                        value: `${body.reporterName} (${body.reporterId})\nDiscord: ${discordUserId ? `<@${discordUserId.id}>` : serverLocale.get((lang) => lang.ticket.embeds.no_user)}`,
                     });
                     break;
                 }
@@ -189,7 +190,7 @@ export default function (app: Express, client: Client) {
                           serverLocale.get(
                               (lang) => lang.ticket.default_message,
                           ),
-                          `<@${discordUserId}>`,
+                          `<@${discordUserId.id}>`,
                       )
                 : serverLocale.get(
                       (lang) => lang.ticket.default_message_no_user,
