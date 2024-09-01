@@ -27,14 +27,7 @@ export default function (app: Express, client: Client) {
         };
         if (!auth) return res.status(400).send("No token provided");
         const token = auth.split(" ")[1];
-        const server = (
-            await db
-                .select()
-                .from(servers)
-                .where(eq(servers.token, token))
-                .execute()
-                .catch(() => [null])
-        )[0];
+        const server = await db.query.servers.findFirst({ where: eq(servers.token, token) }).execute().catch(() => undefined);
         if (!server) return res.status(401).send("Can not find your server with the token you provided");
         const guild = await new DiscordFetch(client).guild(server.id);
         if (!guild) return res.status(400).send("Can not find your server");
@@ -84,7 +77,10 @@ export default function (app: Express, client: Client) {
                 })
                 .returning()
                 .execute()
-                .catch(() => [null])
+                .catch((err) => {
+                    console.log(err);
+                    return [null];
+                })
         )[0];
         if (!ticketInfo) return res.status(500).send("Failed to create ticket in the database, contact Friday staff");
 
