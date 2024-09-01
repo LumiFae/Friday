@@ -35,16 +35,16 @@ export default function (app: Express, client: Client) {
                 .execute()
                 .catch(() => [null])
         )[0];
-        if (!server) return res.status(401).send("Invalid token");
+        if (!server) return res.status(401).send("Can not find your server with the token you provided");
         const guild = await new DiscordFetch(client).guild(server.id);
-        if (!guild) return res.status(400).send("Invalid guild");
-        if (!server.category) return res.status(400).send("No category set");
+        if (!guild) return res.status(400).send("Can not find your server");
+        if (!server.category) return res.status(400).send("You need to set a ticket category! Do /config with Friday to set it up");
         const category = await new DiscordFetch(client).channel(
             server.category,
         );
-        if (!category) return res.status(400).send("Invalid category");
+        if (!category) return res.status(400).send("The category you set is invalid");
         if (category.type !== 4)
-            return res.status(400).send("Invalid category");
+            return res.status(400).send("The category channel you sent is not a category channel");
 
         let discordUserId: User | null = null;
 
@@ -86,7 +86,7 @@ export default function (app: Express, client: Client) {
                 .execute()
                 .catch(() => [null])
         )[0];
-        if (!ticketInfo) return res.status(500).send("Failed to create ticket");
+        if (!ticketInfo) return res.status(500).send("Failed to create ticket in the database, contact Friday staff");
 
         const permissionOverwrites: OverwriteResolvable[] = [
             {
