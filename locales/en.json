@@ -77,6 +77,7 @@
     "close": {
         "invalid_channel": "This is not a ticket channel.",
         "closed": "Ticket has been closed by {user}, please run /delete to remove this channel.",
+        "already_closed": "This ticket has already been closed.",
         "embeds": {
             "title": "Ticket Closed",
             "description": "Ticket {id} has been closed by {user} for {reason}.",

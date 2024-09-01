@@ -44,6 +44,7 @@ export default {
                 content: userLocale.get((lang) => lang.close.invalid_channel),
                 ephemeral: true,
             });
+        if(ticketChannel.closed) return interaction.reply(userLocale.get((lang) => lang.close.already_closed));
         if(ticketChannel.created_by) await interaction.channel.permissionOverwrites.edit(
                 ticketChannel.created_by,
                 { ViewChannel: false },

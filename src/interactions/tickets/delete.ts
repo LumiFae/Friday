@@ -23,7 +23,7 @@ export default {
         const ticketChannel = await db.query.tickets.findFirst({ where: eq(tickets.channelId, interaction.channelId) }).execute().catch(() => undefined);
         if (
             !ticketChannel ||
-            ticketChannel.closed !== false ||
+            ticketChannel.closed !== true ||
             !(interaction.channel instanceof TextChannel)
         ) {
             console.log(ticketChannel);
