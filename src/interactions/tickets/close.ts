@@ -44,17 +44,17 @@ export default {
                 content: userLocale.get((lang) => lang.close.invalid_channel),
                 ephemeral: true,
             });
-        await interaction.channel.permissionOverwrites.edit(
-            ticketChannel.created_by as string,
-            { ViewChannel: false },
-        );
+        if(ticketChannel.created_by) await interaction.channel.permissionOverwrites.edit(
+                ticketChannel.created_by,
+                { ViewChannel: false },
+            );
         for (const invitee of ticketChannel.invitees) {
             await interaction.channel.permissionOverwrites.edit(invitee, {
                 ViewChannel: false,
             });
         }
         await interaction.channel.edit({
-            name: `closed-${makeNumber4Chars(ticketChannel.id)}`,
+            name: `closed-${makeNumber4Chars(ticketChannel.ticketNo)}`,
         });
 
         await interaction.editReply({
@@ -70,7 +70,7 @@ export default {
 
         const transcript = await generateTranscript(interaction.channel);
         const attachment = new AttachmentBuilder(Buffer.from(transcript), {
-            name: `transcript-${makeNumber4Chars(ticketChannel.id)}.txt`,
+            name: `transcript-${makeNumber4Chars(ticketChannel.ticketNo)}.txt`,
         });
 
         if (ticketChannel.created_by) {
