@@ -1,4 +1,4 @@
-import { boolean, pgTable, serial, text, uuid } from "drizzle-orm/pg-core";
+import { boolean, pgTable, serial, text, uuid, integer } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 export type Languages = "en" | null;
@@ -22,6 +22,7 @@ export const servers = pgTable("servers", {
 
 export const tickets = pgTable("tickets", {
     id: serial("id").primaryKey(),
+    ticketNo: integer("ticketNo").notNull(),
     created_by: text("created_by"),
     steamid: text("steamid").notNull(),
     server: text("server").references(() => servers.id),
