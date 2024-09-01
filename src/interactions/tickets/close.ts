@@ -156,8 +156,8 @@ async function generateTranscript(channel: TextChannel) {
     const transcript = messages.map((message) => {
         const author = message.author;
         const content = message.content;
-        if(!content) return null;
         const attachments = message.attachments;
+        if(!content && (!attachments.size || attachments.size === 0)) return null;
         const timestamp = readableTime(message.createdTimestamp);
 
         let out = `${author.tag} (${timestamp}): ${content}`;
