@@ -61,7 +61,7 @@ export default async function (client: Client) {
         );
         client.user?.setPresence({
             activities: [
-                { name: "for your reports", type: ActivityType.Watching },
+                { name: "the report button", type: ActivityType.Watching },
             ],
         });
         await init();
