@@ -6,6 +6,7 @@ import { db, getServer } from "../../../db";
 import { servers } from "../../../schema";
 import { languages, formatLocale } from "../../../locales";
 import type { Languages } from "../../../schema";
+import { eq } from "drizzle-orm";
 
 export default {
     name: "config",
@@ -79,6 +80,9 @@ export default {
             return await interaction.reply({
                 content: userLocale.get((lang) => lang.config.invalid_option),
             });
+        }
+        if(value === 'null' || value === 'none') {
+            await db.update(servers).set({ [option]: null }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
         }
         switch (option) {
             case "category": {
