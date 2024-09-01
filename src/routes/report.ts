@@ -2,7 +2,7 @@ import {
     CategoryChannel,
     Client,
     ChannelType,
-    OverwriteResolvable,
+    OverwriteResolvable, TextChannel
 } from "discord.js";
 import { Express } from "express";
 import { initialiseSteam } from "../utils/steam";
@@ -114,16 +114,18 @@ export default function (app: Express, client: Client) {
                 id: discordUserId.id,
                 allow: "ViewChannel",
             });
-
-        const channel = await category.guild.channels
-            .create({
-                name: `ticket-${makeNumber4Chars(ticketInfo.id)}`,
-                type: ChannelType.GuildText,
-                parent: category,
-                permissionOverwrites,
-            })
-            .catch(() => null);
-        if (!channel) return res.status(500).send("Failed to create channel");
+        let channel: TextChannel;
+        try {
+            channel = await category.guild.channels
+                .create({
+                    name: `ticket-${makeNumber4Chars(ticketInfo.id)}`,
+                    type: ChannelType.GuildText,
+                    parent: category,
+                    permissionOverwrites,
+                })
+        } catch (err) {
+            return res.status(500).send("Failed to create channel: " + err);
+        }
         await db
             .update(tickets)
             .set({ channelId: channel.id })
