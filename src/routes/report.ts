@@ -182,19 +182,17 @@ export default function (app: Express, client: Client) {
         }
         embed.addFields(embedFields);
 
+        let content = "";
+        if(discordUserId) {
+            content += `<@${discordUserId.id}>`;
+            if(server.message) content += server.message;
+            else content += serverLocale.get((lang) => lang.ticket.default_message);
+        } else {
+            content += serverLocale.get((lang) => lang.ticket.default_message_no_user);
+        }
+
         await channel.send({
-            content: discordUserId
-                ? server.message
-                    ? replacement(server.message, `<@${discordUserId}>`)
-                    : replacement(
-                          serverLocale.get(
-                              (lang) => lang.ticket.default_message,
-                          ),
-                          `<@${discordUserId.id}>`,
-                      )
-                : serverLocale.get(
-                      (lang) => lang.ticket.default_message_no_user,
-                  ),
+            content,
             embeds: [embed],
         });
 

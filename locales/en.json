@@ -61,7 +61,7 @@
         }
     },
     "ticket": {
-        "default_message": "Hello {user}, thank you for reporting this user. A member of staff will be with you shortly.",
+        "default_message": "Hello, thank you for reporting this user. A member of staff will be with you shortly.",
         "default_message_no_user": "This ticket was created via the in game report system, no user was found, relevant information is below.",
         "embeds": {
             "title": "Ingame Report Ticket",
