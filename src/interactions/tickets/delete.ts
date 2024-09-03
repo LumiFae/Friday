@@ -26,14 +26,17 @@ export default {
             ticketChannel.closed !== true ||
             !(interaction.channel instanceof TextChannel)
         ) {
-            console.log(ticketChannel);
             return interaction.reply({
                 content: userLocale.get((lang) => lang.delete.invalid_channel),
                 ephemeral: true,
             });
         }
         await interaction.reply(userLocale.get((lang) => lang.delete.deleting));
-        await interaction.channel.delete();
+        try {
+            await interaction.channel.delete()
+        } catch (_) {
+            return await interaction.reply({ content: userLocale.get((lang) => lang.delete.no_permissions), ephemeral: true });
+        }
         await db
             .delete(tickets)
             .where(eq(tickets.channelId, interaction.channelId))

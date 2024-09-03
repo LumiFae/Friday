@@ -2,7 +2,7 @@ import {
     CategoryChannel,
     Client,
     ChannelType,
-    OverwriteResolvable, TextChannel
+    OverwriteResolvable, TextChannel, PermissionFlagsBits, PermissionsBitField
 } from "discord.js";
 import { Express } from "express";
 import { initialiseSteam } from "../utils/steam";
@@ -105,7 +105,7 @@ export default function (app: Express, client: Client) {
             },
             {
                 id: client.user?.id as string,
-                allow: "ViewChannel",
+                allow: ["ViewChannel", "ManageChannels", "ManageRoles"],
             },
         ];
         if (server.mod_role)

@@ -45,19 +45,31 @@ export default {
                 ephemeral: true,
             });
         if(ticketChannel.closed) return interaction.reply(userLocale.get((lang) => lang.close.already_closed));
-        if(ticketChannel.created_by) await interaction.channel.permissionOverwrites.edit(
-                ticketChannel.created_by,
-                { ViewChannel: false },
-            );
+        if(ticketChannel.created_by) {
+            try {
+                await interaction.channel.permissionOverwrites.edit(
+                    ticketChannel.created_by,
+                    { ViewChannel: false },
+                )
+            } catch(_) {
+                return await interaction.reply({ content: userLocale.get((lang) => lang.close.no_permissions_edit), ephemeral: true });
+            }
+        }
         for (const invitee of ticketChannel.invitees) {
             await interaction.channel.permissionOverwrites.edit(invitee, {
                 ViewChannel: false,
             });
         }
-        await interaction.channel.edit({
-            name: `closed-${makeNumber4Chars(ticketChannel.ticketNo)}`,
-        });
-
+        try {
+            await interaction.channel.edit({
+                name: `closed-${makeNumber4Chars(ticketChannel.ticketNo)}`,
+            });
+        } catch (_) {
+            return await interaction.reply({
+                content: userLocale.get((lang) => lang.close.no_permissions_name),
+                ephemeral: true
+            })
+        }
         await interaction.editReply({
             content: replacement(userLocale.get((lang) => lang.close.closed), `<@${interaction.user.id}>`),
         });

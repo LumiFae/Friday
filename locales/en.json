@@ -84,7 +84,9 @@
             "description_user": "Ticket {id} made by {created} has been closed by {user} for {reason}."
         },
         "user_closed": "Your ticket has been closed for {reason}. Here is the transcript:",
-        "no_reason": "None provided"
+        "no_reason": "None provided",
+        "no_permissions_edit": "I couldn't make it so the ticket users can't see the channel, check that I have the \"Manage Channel\" and \"Manage Permissions\" permission for this channel.",
+        "no_permissions_name": "I couldn't change the name of this channel to closed due to my permissions, check that I have the \"Manage Channel\" and \"Manage Permissions\" permission for this channel."
     },
     "delete": {
         "invalid_channel": "Either this is not a ticket channel or this channel is not marked as closed.",
@@ -93,7 +95,8 @@
             "title": "Ticket Deleted",
             "description": "Ticket {id} has been deleted by {user}.",
             "description_user": "Ticket {id} made by {created} has been deleted by {user}."
-        }
+        },
+        "no_permissions": "I couldn't delete this channel, check that I have the \"Manage Channel\" permission for this channel."
     },
     "adduser": {
         "invalid_user": "This user is already in this channel.",
