@@ -1,14 +1,11 @@
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
     TextChannel,
 } from "discord.js";
 import { Command } from "../../types/discord";
 import { db, getServer } from "../../db";
 import { tickets } from "../../schema";
 import { eq, sql } from "drizzle-orm";
-import { DiscordFetch, embed as embed_ } from "../../utils/discord";
+import { embed as embed_ } from "../../utils/discord";
 import { replacement } from "../../locales";
 
 export default {

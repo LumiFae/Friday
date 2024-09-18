@@ -1,8 +1,7 @@
-import { Client } from "discord.js";
 import { Express } from "express";
 import { initialiseSteam } from "../utils/steam";
 
-export default function (app: Express, client: Client) {
+export default function (app: Express) {
     app.get("/auth", async (req, res) => {
         const clientid = req.query.clientid;
         if (!clientid) return res.status(400).send("No clientid provided");

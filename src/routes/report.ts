@@ -1,16 +1,14 @@
 import {
-    CategoryChannel,
     Client,
     ChannelType,
-    OverwriteResolvable, TextChannel, PermissionFlagsBits, PermissionsBitField
+    OverwriteResolvable, TextChannel,
 } from "discord.js";
 import { Express } from "express";
-import { initialiseSteam } from "../utils/steam";
 import { db, getUser, User } from "../db";
 import { servers, tickets } from "../schema";
 import { eq } from "drizzle-orm";
 import { DiscordFetch, embed as embed_ } from "../utils/discord";
-import { Locales, replacement } from "../locales";
+import { Locales } from "../locales";
 import ids from '../../ids.json';
 
 export default function (app: Express, client: Client) {

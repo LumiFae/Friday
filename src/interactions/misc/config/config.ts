@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, CategoryChannel } from "discord.js";
+import { PermissionFlagsBits } from "discord.js";
 import { Command } from "../../../types/discord";
 import { DiscordFetch, embed } from "../../../utils/discord";
 import { haveLocale, Locales } from "../../../locales";

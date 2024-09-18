@@ -1,5 +1,4 @@
 import type {
-    AnySelectMenuInteraction,
     ApplicationCommandOption,
     AutocompleteInteraction,
     ButtonInteraction,

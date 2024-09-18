@@ -1,7 +1,4 @@
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
     TextChannel,
 } from "discord.js";
 import { Command } from "../../types/discord";
