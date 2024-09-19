@@ -37,6 +37,7 @@ export default function (app: Express, client: Client) {
             .execute()
             .catch(() => []);
         for (const ticket of tickets) {
+            if (!ticket.channelId || ticket.closed) continue;
             await db
                 .update(ticketSchema)
                 .set({ created_by: actualClientId })

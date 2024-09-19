@@ -12,7 +12,7 @@ export default async function (client: Client) {
         if(!user) return;
         const tickets = await db.select().from(ticketSchema).where(eq(ticketSchema.created_by, user.id)).execute();
         for(const ticket of tickets){
-            if(!ticket.channelId) continue;
+            if(!ticket.channelId || ticket.closed) continue;
             const channel = await new DiscordFetch(client).channel(ticket.channelId);
             if(!channel || !(channel instanceof BaseGuildTextChannel)) continue;
             await channel.permissionOverwrites.create(user.id, {
