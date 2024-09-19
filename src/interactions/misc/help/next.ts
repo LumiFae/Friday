@@ -44,7 +44,7 @@ export default {
             .setLabel(userLocale.get((lang) => lang.help.button.previous))
             .setStyle(ButtonStyle.Primary);
 
-        let next = new ButtonBuilder()
+        const next = new ButtonBuilder()
             .setCustomId("next")
             .setLabel(userLocale.get((lang) => lang.help.button.next))
             .setStyle(ButtonStyle.Primary);

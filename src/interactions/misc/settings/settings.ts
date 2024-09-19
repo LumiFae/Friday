@@ -1,6 +1,5 @@
-import { ButtonStyle, PermissionFlagsBits } from "discord.js";
 import { Command } from "../../../types/discord";
-import { DiscordFetch, embed } from "../../../utils/discord";
+import { embed } from "../../../utils/discord";
 import { formatLocale, haveLocale, Locales } from "../../../locales";
 import { db, getUser } from "../../../db";
 import { servers, users } from "../../../schema";

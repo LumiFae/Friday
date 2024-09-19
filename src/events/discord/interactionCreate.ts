@@ -1,7 +1,7 @@
 import { Client, Interaction } from "discord.js";
 import { commands } from "../..";
 import { Locales, formatLocale } from "../../locales";
-import { db, getLocale } from "../../db";
+import { getLocale } from "../../db";
 
 export default async function (client: Client) {
     client.on("interactionCreate", async (interaction) => {
@@ -10,7 +10,9 @@ export default async function (client: Client) {
             finder = interaction.customId;
         } else {
             finder = interaction.commandName;
-            interaction.isAutocomplete() ? (finder += "-autocomplete") : finder;
+            if (interaction.isAutocomplete()) {
+                finder += "-autocomplete";
+            }
         }
         const command = commands.get(finder);
         if (!command) return;

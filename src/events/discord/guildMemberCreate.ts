@@ -1,6 +1,5 @@
-import { BaseGuildTextChannel, Client, Interaction } from "discord.js";
-import { commands } from "../..";
-import { Locales, formatLocale, replacement } from "../../locales";
+import { BaseGuildTextChannel, Client } from "discord.js";
+import { Locales, replacement } from "../../locales";
 import { db, getLocale, getUser } from "../../db";
 import { tickets as ticketSchema } from "../../schema";
 import { eq } from "drizzle-orm";

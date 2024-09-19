@@ -39,7 +39,7 @@ export default {
             .addFields(fields)
             .setFooter({ text: footer });
 
-        let previous = new ButtonBuilder()
+        const previous = new ButtonBuilder()
             .setCustomId("previous")
             .setLabel(userLocale.get((lang) => lang.help.button.previous))
             .setStyle(ButtonStyle.Primary);

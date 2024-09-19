@@ -1,4 +1,3 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import { Command } from "../../types/discord";
 import { getUser } from "../../db";
 import { DiscordFetch, embed as embed_ } from "../../utils/discord";
@@ -37,7 +36,7 @@ export default {
             .addFields([
                 {
                     name: 'Steam',
-                    value: !!steamData ? `[${steamData.personaname}](${steamData.profileurl})` : userLocale.get((lang) => lang.profile.no_steam),
+                    value: steamData ? `[${steamData.personaname}](${steamData.profileurl})` : userLocale.get((lang) => lang.profile.no_steam),
                 },
                 {
                     name: userLocale.get((lang) => lang.profile.other_connections),
