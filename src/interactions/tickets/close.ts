@@ -82,6 +82,7 @@ export default {
             .catch(() => null);
 
         const transcript = await generateTranscript(interaction.channel);
+
         const attachment = new AttachmentBuilder(Buffer.from(transcript), {
             name: `transcript-${makeNumber4Chars(ticketChannel.ticketNo)}.txt`,
         });
@@ -98,10 +99,10 @@ export default {
                     content: replacement(
                         userLocale_.get((lang) => lang.close.user_closed),
                         interaction.options.getString("reason") ||
-                            userLocale_.get((lang) => lang.close.no_reason),
+                        userLocale_.get((lang) => lang.close.no_reason),
                     ),
                     files: [attachment],
-                });
+                }).catch(() => null);
             }
         }
 
@@ -118,6 +119,7 @@ export default {
                           serverLocale.get(
                               (lang) => lang.close.embeds.description,
                           ),
+                          String(ticketChannel.id),
                           `<@${interaction.user.id}>`,
                           interaction.options.getString("reason") ||
                               "None Provided",
@@ -126,6 +128,7 @@ export default {
                           serverLocale.get(
                               (lang) => lang.close.embeds.description_user,
                           ),
+                            String(ticketChannel.id),
                           `<@${interaction.user.id}>`,
                           `<@${ticketChannel.created_by}>`,
                           interaction.options.getString("reason") ||
@@ -165,11 +168,12 @@ async function fetchMessages(channel: TextChannel) {
 
 async function generateTranscript(channel: TextChannel) {
     const messages = await fetchMessages(channel);
-    const transcript = messages.map((message) => {
+    let transcript: string[] = [];
+    for(const message of messages) {
         const author = message.author;
         const content = message.content;
         const attachments = message.attachments;
-        if(!content && (!attachments.size || attachments.size === 0)) return null;
+        if (!content && (!attachments.size || attachments.size === 0)) continue;
         const timestamp = readableTime(message.createdTimestamp);
 
         let out = `${author.tag} (${timestamp}): ${content}`;
@@ -178,9 +182,10 @@ async function generateTranscript(channel: TextChannel) {
                 .map((attachment) => "\n" + attachment.url)
                 .join("");
         }
-        if(transcript.includes(out)) return null;
-        return out;
-    }).filter((message) => message !== null) as string[];
+        if (transcript.includes(out)) continue;
+        transcript.push(out);
+    }
+    transcript = transcript.filter((message) => message !== null);
     return transcript.join("\n\n");
 }
 
