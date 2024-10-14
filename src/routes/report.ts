@@ -128,6 +128,7 @@ export default function (app: Express, client: Client) {
                     permissionOverwrites,
                 })
         } catch (err) {
+            await db.delete(tickets).where(eq(tickets.id, ticketInfo.id)).execute().catch(() => null);
             return res.status(500).send("Failed to create channel: " + err);
         }
         await db
