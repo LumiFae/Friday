@@ -119,9 +119,9 @@ export default {
                           serverLocale.get(
                               (lang) => lang.close.embeds.description,
                           ),
-                          String(ticketChannel.ticketNo),
+                          `\`${String(ticketChannel.ticketNo)}\``,
                           `<@${interaction.user.id}>`,
-                          interaction.options.getString("reason") ||
+                        `\`${interaction.options.getString("reason")}\`` ||
                               "None Provided",
                       )
                     : replacement(
