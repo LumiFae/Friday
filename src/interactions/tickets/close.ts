@@ -144,26 +144,24 @@ function makeNumber4Chars(number: number): string {
 }
 
 async function fetchMessages(channel: TextChannel) {
-    const out: Message[] = [];
-    let lastID: string | undefined;
-    while (true) {
-        const options: { cache: false; limit: number; before?: string } = {
-            limit: 100,
-            cache: false,
-        };
-        if (lastID) options.before = lastID;
+    let messages: Message[] = [];
 
-        const messages = await channel.messages
-            .fetch(options)
-            .catch(() => null);
-        if (!messages || messages.size === 0) {
-            break;
-        }
+    // Create message pointer
+    let message = await channel.messages
+        .fetch({ limit: 1 })
+        .then(messagePage => (messagePage.size === 1 ? messagePage.at(0) : null));
 
-        out.push(...messages.values());
-        lastID = messages.first()?.id;
+    while (message) {
+        await channel.messages
+            .fetch({ limit: 100, before: message.id })
+            .then(messagePage => {
+                messagePage.forEach(msg => messages.push(msg));
+
+                // Update our message pointer to be the last message on the page of messages
+                message = 0 < messagePage.size ? messagePage.at(messagePage.size - 1) : null;
+            });
     }
-    return out;
+    return messages;
 }
 
 async function generateTranscript(channel: TextChannel) {

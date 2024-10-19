@@ -54,14 +54,14 @@ export default {
                           serverLocale.get(
                               (lang) => lang.delete.embeds.description,
                           ),
-                          String(ticketChannel.ticketNo),
+                          `\`${ticketChannel.ticketNo}\``,
                           `<@${interaction.user.id}>`,
                       )
                     : replacement(
                           serverLocale.get(
                               (lang) => lang.delete.embeds.description_user,
                           ),
-                            String(ticketChannel.ticketNo),
+                        `\`${ticketChannel.ticketNo}\``,
                           `<@${interaction.user.id}>`,
                           `<@${ticketChannel.created_by}>`,
                       ),
