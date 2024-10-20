@@ -73,7 +73,8 @@ export default {
                     `<@${interaction.options.getUser("user", true).id}>`,
                     `<@${interaction.user.id}>`,
                 ),
-            );
+            )
+            .setFooter({ text: serverLocale.get((lang) => lang.adduser.embeds.footer) });
         await interaction.reply({ embeds: [embed] });
     },
 } satisfies Command;
