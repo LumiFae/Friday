@@ -1,17 +1,28 @@
 import {
-    CategoryChannel,
     Client,
     ChannelType,
-    OverwriteResolvable, TextChannel, PermissionFlagsBits, PermissionsBitField
+    OverwriteResolvable, TextChannel
 } from "discord.js";
-import { Express } from "express";
-import { initialiseSteam } from "../utils/steam";
+import { Express, Response } from "express";
 import { db, getUser, User } from "../db";
 import { servers, tickets } from "../schema";
 import { eq } from "drizzle-orm";
 import { DiscordFetch, embed as embed_ } from "../utils/discord";
-import { Locales, replacement } from "../locales";
+import { Locales } from "../locales";
 import ids from '../../ids.json';
+
+async function log(res: Response, server: typeof servers.$inferSelect, client: Client, message: string, statusCode = 400){
+    message = "Someone just tried to report a player, but something went wrong. Here's the error: \n" + message;
+    if(server.log_channel){
+        const logChannel = await new DiscordFetch(client).channel(server.log_channel);
+        if(logChannel && logChannel.type === ChannelType.GuildText) {
+            logChannel.send({
+                content: message
+            });
+        }
+    }
+    return res.status(statusCode).send(message);
+}
 
 export default function (app: Express, client: Client) {
     app.post("/report", async (req, res) => {
@@ -25,20 +36,19 @@ export default function (app: Express, client: Client) {
             serverName: string;
             serverType: number | undefined;
         };
-        console.log(`Received report: ${JSON.stringify(body)}`);
         if (!auth) return res.status(400).send("No token provided");
         const token = auth.split(" ")[1];
         const server = await db.query.servers.findFirst({ where: eq(servers.token, token) }).execute().catch(() => undefined);
         if (!server) return res.status(401).send("Can not find your server with the token you provided");
         const guild = await new DiscordFetch(client).guild(server.id);
         if (!guild) return res.status(400).send("Can not find your server");
-        if (!server.category) return res.status(400).send("You need to set a ticket category! Do /config with Friday to set it up");
+        if (!server.category) return await log(res, server, client, "You need to set a ticket category! Do /config with Friday to set it up", 400);
         const category = await new DiscordFetch(client).channel(
             server.category,
         );
-        if (!category) return res.status(400).send("The category you set is invalid");
-        if (category.type !== 4)
-            return res.status(400).send("The category channel you sent is not a category channel");
+        if (!category) return await log(res, server, client, "The category you set is invalid", 400);
+        if (category.type !== ChannelType.GuildCategory)
+            return await log(res, server, client, "The category channel you sent is not a category channel", 400);
 
         let discordUserId: User | null = null;
 
@@ -90,7 +100,7 @@ export default function (app: Express, client: Client) {
                     return [null];
                 })
         )[0];
-        if (!ticketInfo) return res.status(500).send("Failed to create ticket in the database, contact Friday staff");
+        if (!ticketInfo) return await log(res, server, client, "Failed to create ticket in the database, contact Friday staff", 500);
 
         const permissionOverwrites: OverwriteResolvable[] = [
             {
@@ -129,7 +139,7 @@ export default function (app: Express, client: Client) {
                 })
         } catch (err) {
             await db.delete(tickets).where(eq(tickets.id, ticketInfo.id)).execute().catch(() => null);
-            return res.status(500).send("Failed to create channel: " + err);
+            return await log(res, server, client, `Failed to create channel: \`\`\`${err}\`\`\``, 500);
         }
         await db
             .update(tickets)
