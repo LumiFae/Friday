@@ -128,7 +128,7 @@ export default {
                           serverLocale.get(
                               (lang) => lang.close.embeds.description_user,
                           ),
-                            String(ticketChannel.id),
+                            String(ticketChannel.ticketNo),
                           `<@${interaction.user.id}>`,
                           `<@${ticketChannel.created_by}>`,
                           interaction.options.getString("reason") ||

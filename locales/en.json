@@ -35,7 +35,8 @@
             "log_channel": "Channel to log tickets in (log_channel)",
             "mod_role": "Role that gets added to all tickets (mod_role)",
             "message": "Message to send to the ticket when it is created, if the person is in the discord (message)",
-            "locale": "Language to use for the bot, per server (locale)"
+            "locale": "Language to use for the bot, per server (locale)",
+            "ping_mods": "Should mods be pinged when a ticket is created (ping_mods)"
         },
         "success": "Successfully updated the configuration for this server."
     },

@@ -202,6 +202,26 @@ export default {
                     });
                 break;
             }
+            case "ping_mods": {
+                if (value !== "true" && value !== "false") {
+                    return await interaction.reply({
+                        content: userLocale.get(
+                            (lang) => lang.config.invalid_value,
+                        ),
+                    });
+                }
+                await db
+                    .insert(servers)
+                    .values({
+                        id: interaction.guildId,
+                        ping_mods: value === "true",
+                    })
+                    .onConflictDoUpdate({
+                        target: servers.id,
+                        set: { ping_mods: value === "true" },
+                    });
+                break;
+            }
         }
         await interaction.reply({
             content: userLocale.get((lang) => lang.config.success),

@@ -16,6 +16,7 @@ export const servers = pgTable("servers", {
     log_channel: text("log_channel"),
     mod_role: text("mod_role"),
     message: text("message"),
+    ping_mods: boolean("ping_mods").notNull().default(false),
     locale: text("locale").$type<Languages>(),
     token: text("token").unique(),
 });
