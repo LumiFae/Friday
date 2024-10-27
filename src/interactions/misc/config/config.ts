@@ -62,6 +62,9 @@ export default {
                     if(key === "mod_role") {
                         value = value ? `<@&${value}>` : "Not Set";
                     }
+                    if(typeof value === "boolean") {
+                        value = value ? "True" : "False";
+                    }
                     return {
                         name: configOptionNames[key],
                         value: value ?? "Not Set",
