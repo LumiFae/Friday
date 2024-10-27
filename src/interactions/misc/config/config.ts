@@ -54,17 +54,20 @@ export default {
                 ),
             )
             .addFields(
-                keys.map((key) => ({
-                    name: configOptionNames[key],
-                    value: server[key]
-                        ? key === "category" || key === "log_channel"
-                            ? `<#${server[key]}>`
-                            : key === "mod_role"
-                              ? `<@&${server[key]}>`
-                              : server[key]
-                        : "Not Set",
-                    inline: true,
-                })),
+                keys.map((key) => {
+                    let value = server[key];
+                    if(key === "category" || key === "log_channel") {
+                        value = value ? `<#${value}>` : "Not Set";
+                    }
+                    if(key === "mod_role") {
+                        value = value ? `<@&${value}>` : "Not Set";
+                    }
+                    return {
+                        name: configOptionNames[key],
+                        value: value ?? "Not Set",
+                        inline: true,
+                    };
+                }),
             );
         if (!option || !value) {
             return await interaction.reply({ embeds: [standard] });
