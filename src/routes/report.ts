@@ -201,6 +201,7 @@ export default function (app: Express, client: Client) {
             if(server.message) content += server.message;
             else content += serverLocale.get((lang) => lang.ticket.default_message);
         } else {
+            if(server.mod_role && server.ping_mods) content += ` <@&${server.mod_role}>`;
             content += serverLocale.get((lang) => lang.ticket.default_message_no_user);
         }
 
