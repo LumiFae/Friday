@@ -2,12 +2,11 @@ import SteamAuth from "node-steam-openid";
 import axios from "axios";
 
 export async function initialiseSteam(url: URL, clientId: string) {
-    const steam = new SteamAuth({
+    return new SteamAuth({
         realm: url.origin,
         returnUrl: `${url.origin}/auth/callback?clientid=${clientId}`,
         apiKey: process.env.STEAM_KEY as string,
     });
-    return steam;
 }
 
 export async function getPlayerSummaries(...steamIDs: string[]) {

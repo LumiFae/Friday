@@ -6,7 +6,7 @@ export default {
     name: "connect",
     role: "CHAT_INPUT",
     description: "Connect your Steam account to the bot",
-    run: async (interaction, serverLocale, userLocale) => {
+    run: async (interaction, _, userLocale) => {
         const user = await getUser(interaction.user.id);
         if (!user)
             return await interaction.reply({

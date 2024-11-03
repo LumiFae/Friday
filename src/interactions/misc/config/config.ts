@@ -1,4 +1,4 @@
-import { PermissionFlagsBits, CategoryChannel } from "discord.js";
+import { PermissionFlagsBits } from "discord.js";
 import { Command } from "../../../types/discord";
 import { DiscordFetch, embed } from "../../../utils/discord";
 import { haveLocale, Locales } from "../../../locales";
@@ -27,7 +27,7 @@ export default {
     ],
     default_member_permissions: PermissionFlagsBits.ManageGuild,
     contexts: [0],
-    run: async (interaction, serverLocale, userLocale) => {
+    run: async (interaction, _, userLocale) => {
         if (!interaction.guildId) return;
         const option = interaction.options.getString("option");
         const value = interaction.options.getString("value");

@@ -8,7 +8,7 @@ export default {
     name: "help",
     role: "CHAT_INPUT",
     description: "Get help with the bot!",
-    run: async (interaction, serverLocale, userLocale) => {
+    run: async (interaction, _, userLocale) => {
         const embed_ = embed()
             .setTitle(userLocale.get((lang) => lang.help.embeds.title))
             .setDescription(

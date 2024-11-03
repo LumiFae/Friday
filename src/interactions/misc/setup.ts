@@ -1,7 +1,4 @@
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
     PermissionFlagsBits,
 } from "discord.js";
 import { Command } from "../../types/discord";
@@ -29,7 +26,7 @@ export default {
     description: "Setup the bot",
     contexts: [0],
     default_member_permissions: PermissionFlagsBits.ManageGuild,
-    run: async (interaction, serverLocale, userLocale) => {
+    run: async (interaction, _, userLocale) => {
         if (!interaction.guildId) return;
         const serverDb = await getServer(interaction.guildId);
         if (serverDb && serverDb.token) {

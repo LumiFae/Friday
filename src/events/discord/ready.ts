@@ -1,7 +1,6 @@
 import { Client, REST, Routes, ActivityType } from "discord.js";
 import { commands } from "../..";
 import { readdirSync } from "fs";
-import path from "path";
 import { Command, CommandNoRun } from "../../types/discord";
 import { init } from "../../db";
 import { load } from "../../locales";
@@ -112,7 +111,3 @@ const isDeepEqual = (
 const isObject = (object: unknown) => {
     return object != null && typeof object === "object";
 };
-
-function cwd() {
-    return __dirname.split("/").slice(0, -2).join("/");
-}

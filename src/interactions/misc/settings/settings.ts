@@ -1,6 +1,5 @@
-import { ButtonStyle, PermissionFlagsBits } from "discord.js";
 import { Command } from "../../../types/discord";
-import { DiscordFetch, embed } from "../../../utils/discord";
+import { embed } from "../../../utils/discord";
 import { formatLocale, haveLocale, Locales } from "../../../locales";
 import { db, getUser } from "../../../db";
 import { servers, users } from "../../../schema";
@@ -24,7 +23,7 @@ export default {
             description: "The value to set the option to",
         },
     ],
-    run: async (interaction, serverLocale, userLocale) => {
+    run: async (interaction, _, userLocale) => {
         const option = interaction.options.getString("option");
         const value = interaction.options.getString("value");
         const user = (await getUser(interaction.user.id)) || {

@@ -7,7 +7,7 @@ import { replacement } from "../../../locales";
 export default {
     custom_id: "previous",
     role: "BUTTON",
-    run: async (interaction, serverLocale, userLocale) => {
+    run: async (interaction, _, userLocale) => {
         if (interaction.user.id !== interaction.message.interaction?.user.id) {
             return interaction.reply({
                 content: userLocale.get((lang) => lang.not_your_command),

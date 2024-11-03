@@ -17,7 +17,7 @@ export class DiscordFetch {
         );
     }
 
-    async channel(id: string) {
+    async channel(id: string): Promise<Channel | null> {
         return (
             this.client.channels.cache.get(id) ||
             (await this.client.channels.fetch(id).catch(() => null))
@@ -58,7 +58,7 @@ function isFetchableChannel(channel: Nullable<Channel>): channel is TextChannel 
     return channel instanceof TextChannel || channel instanceof NewsChannel;
 }
 
-export async function fetchChannel(client: Client, channelID: Snowflake | FetchableChannel) {
+export async function fetchChannel(client: Client, channelID: string | FetchableChannel) {
     const channel = typeof channelID === 'string' ? await client.channels.fetch(channelID) : channelID;
     let messages = new Collection<Snowflake, Message>();
 

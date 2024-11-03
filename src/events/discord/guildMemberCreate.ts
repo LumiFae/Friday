@@ -1,6 +1,5 @@
-import { BaseGuildTextChannel, Client, Interaction } from "discord.js";
-import { commands } from "../..";
-import { Locales, formatLocale, replacement } from "../../locales";
+import { Client, TextChannel } from "discord.js";
+import { Locales, replacement } from "../../locales";
 import { db, getLocale, getUser } from "../../db";
 import { tickets as ticketSchema } from "../../schema";
 import { eq } from "drizzle-orm";
@@ -14,7 +13,7 @@ export default async function (client: Client) {
         for(const ticket of tickets){
             if(!ticket.channelId || ticket.closed) continue;
             const channel = await new DiscordFetch(client).channel(ticket.channelId);
-            if(!channel || !(channel instanceof BaseGuildTextChannel)) continue;
+            if(!channel || !(channel instanceof TextChannel)) continue;
             await channel.permissionOverwrites.create(user.id, {
                 ViewChannel: true
             });

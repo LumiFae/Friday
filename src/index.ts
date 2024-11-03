@@ -46,7 +46,7 @@ for (const file of routeFiles) {
     });
 }
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
     res.send(
         `Welcome to Friday, this page looks empty but it's not supposed to be for much. If you're looking for the source code, then you can go here <a href="https://github.com/JayXTQ/Friday">https://github.com/JayXTQ/Friday</a> to view it.
 <br>

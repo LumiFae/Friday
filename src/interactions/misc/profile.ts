@@ -1,4 +1,3 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import { Command } from "../../types/discord";
 import { getUser } from "../../db";
 import { DiscordFetch, embed as embed_ } from "../../utils/discord";
@@ -19,7 +18,7 @@ export default {
         },
     ],
     contexts: [0],
-    run: async (interaction, serverLocale, userLocale) => {
+    run: async (interaction, _, userLocale) => {
         if(!interaction.guildId) return;
         const user = interaction.options.getUser('user') || interaction.user;
         const member = await new DiscordFetch(interaction.client).member(interaction.guildId, user.id);

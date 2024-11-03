@@ -1,18 +1,10 @@
-import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    PermissionsBitField,
-    PermissionFlagsBits,
-} from "discord.js";
 import { Command } from "../../../types/discord";
-import { embed } from "../../../utils/discord";
 import { Locales } from "../../../locales";
 
 export default {
     name: "config-autocomplete",
     role: "AUTOCOMPLETE",
-    run: async (interaction, serverLocale, userLocale) => {
+    run: async (interaction, _, __) => {
         const option = interaction.options.getFocused(true);
         switch (option.name) {
             case "option": {
