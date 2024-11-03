@@ -60,19 +60,21 @@ function isFetchableChannel(channel: Nullable<Channel>): channel is TextChannel 
 
 export async function fetchChannel(client: Client, channelID: string | FetchableChannel) {
     const channel = typeof channelID === 'string' ? await client.channels.fetch(channelID) : channelID;
-    let messages = new Collection<Snowflake, Message>();
+    if(!channel || !isFetchableChannel(channel)) return [];
+    if(!channel.isTextBased()) return [];
+    if(channel.isDMBased()) return [];
+    if(channel.isThread()) return [];
+    if(channel.isVoiceBased()) return [];
+    let messages: Message[] = []
+    let lastID: string | undefined;
 
-    if (isFetchableChannel(channel)) {
-        let channelMessages = await channel.messages.fetch({limit: 100});
-
-        while (channelMessages.size > 0) {
-            messages = messages.concat(channelMessages);
-            channelMessages = await channel.messages.fetch({
-                limit: 100,
-                before: channelMessages.last()!.id,
-            });
-        }
+    while(true) {
+        const fetchedMessages = await channel.messages.fetch({
+            limit: 100,
+            ...(lastID && { before: lastID })
+        })
+        if(fetchedMessages.size === 0) return messages;
+        messages = messages.concat(Array.from(fetchedMessages.values()));
+        lastID = fetchedMessages.lastKey();
     }
-
-    return messages;
 }

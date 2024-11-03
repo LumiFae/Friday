@@ -141,15 +141,7 @@ function makeNumber4Chars(number: number): string {
 }
 
 async function fetchMessages(channel: TextChannel) {
-    let messages: Message[] = [];
-
-    const getMessages = await fetchChannel(channel.client, channel)
-
-    if (!getMessages) return messages;
-
-    getMessages.forEach((message) => messages.push(message));
-
-    return messages;
+    return await fetchChannel(channel.client, channel);
 }
 
 async function generateTranscript(channel: TextChannel) {
