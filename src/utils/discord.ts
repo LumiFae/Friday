@@ -1,4 +1,4 @@
-import { Client, EmbedBuilder } from "discord.js";
+import { Client, EmbedBuilder, Channel, TextChannel, NewsChannel, Snowflake, Collection, Message } from "discord.js";
 
 export function embed() {
     return new EmbedBuilder().setColor("#0099ff");
@@ -48,4 +48,31 @@ export class DiscordFetch {
             null
         );
     }
+}
+
+type Nullable<T> = T | null;
+
+export type FetchableChannel = NewsChannel | TextChannel;
+
+function isFetchableChannel(channel: Nullable<Channel>): channel is TextChannel | NewsChannel {
+    return channel instanceof TextChannel || channel instanceof NewsChannel;
+}
+
+export async function fetchChannel(client: Client, channelID: Snowflake | FetchableChannel) {
+    const channel = typeof channelID === 'string' ? await client.channels.fetch(channelID) : channelID;
+    let messages = new Collection<Snowflake, Message>();
+
+    if (isFetchableChannel(channel)) {
+        let channelMessages = await channel.messages.fetch({limit: 100});
+
+        while (channelMessages.size > 0) {
+            messages = messages.concat(channelMessages);
+            channelMessages = await channel.messages.fetch({
+                limit: 100,
+                before: channelMessages.last()!.id,
+            });
+        }
+    }
+
+    return messages;
 }

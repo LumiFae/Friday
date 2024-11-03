@@ -10,7 +10,7 @@ import { Command } from "../../types/discord";
 import { db, getLocale, getServer } from "../../db";
 import { tickets } from "../../schema";
 import { eq } from "drizzle-orm";
-import { DiscordFetch, embed as embed_ } from "../../utils/discord";
+import { DiscordFetch, embed as embed_, fetchChannel } from "../../utils/discord";
 import { Locales, replacement } from "../../locales";
 
 export default {
@@ -146,21 +146,12 @@ function makeNumber4Chars(number: number): string {
 async function fetchMessages(channel: TextChannel) {
     let messages: Message[] = [];
 
-    // Create message pointer
-    let message = await channel.messages
-        .fetch({ limit: 1 })
-        .then(messagePage => (messagePage.size === 1 ? messagePage.at(0) : null));
+    const getMessages = await fetchChannel(channel.client, channel)
 
-    while (message) {
-        await channel.messages
-            .fetch({ limit: 100, before: message.id })
-            .then(messagePage => {
-                messagePage.forEach(msg => messages.push(msg));
+    if (!getMessages) return messages;
 
-                // Update our message pointer to be the last message on the page of messages
-                message = 0 < messagePage.size ? messagePage.at(messagePage.size - 1) : null;
-            });
-    }
+    getMessages.forEach((message) => messages.push(message));
+
     return messages;
 }
 
