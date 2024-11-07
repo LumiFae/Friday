@@ -19,6 +19,7 @@ export const servers = pgTable("servers", {
     ping_mods: boolean("ping_mods").notNull().default(false),
     locale: text("locale").$type<Languages>(),
     token: text("token").unique(),
+    lastTicketNo: integer("lastTicketNo").notNull().default(0),
 });
 
 export const tickets = pgTable("tickets", {

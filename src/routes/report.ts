@@ -78,12 +78,7 @@ export default function (app: Express, client: Client) {
             ))
         )
             discordUserId = null;
-        const tickets_ = await db.query.tickets.findMany({ where: eq(tickets.server, server.id)}).execute().catch(() => []);
-        let nextNumber = 0;
-        if(tickets_[0]) tickets_.forEach((ticket) => {
-            if (ticket.ticketNo > nextNumber) nextNumber = ticket.ticketNo;
-        })
-        nextNumber++;
+
         const ticketInfo = (
             await db
                 .insert(tickets)
@@ -91,7 +86,7 @@ export default function (app: Express, client: Client) {
                     created_by: discordUserId?.id || null,
                     server: server.id,
                     steamid: body.reporterId,
-                    ticketNo: nextNumber
+                    ticketNo: server.lastTicketNo+1
                 })
                 .returning()
                 .execute()
@@ -101,6 +96,8 @@ export default function (app: Express, client: Client) {
                 })
         )[0];
         if (!ticketInfo) return await log(res, server, client, "Failed to create ticket in the database, contact Friday staff", 500);
+
+        await db.update(servers).set({ lastTicketNo: server.lastTicketNo+1 }).where(eq(servers.id, server.id)).execute().catch(() => null);
 
         const permissionOverwrites: OverwriteResolvable[] = [
             {
@@ -132,7 +129,7 @@ export default function (app: Express, client: Client) {
         try {
             channel = await category.guild.channels
                 .create({
-                    name: `ticket-${makeNumber4Chars(nextNumber)}`,
+                    name: `ticket-${makeNumber4Chars(server.lastTicketNo+1)}`,
                     type: ChannelType.GuildText,
                     parent: category,
                     permissionOverwrites,
