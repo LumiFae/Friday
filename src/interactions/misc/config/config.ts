@@ -1,4 +1,4 @@
-import { PermissionFlagsBits } from "discord.js";
+import { CategoryChannel, ChannelType, PermissionFlagsBits } from "discord.js";
 import { Command } from "../../../types/discord";
 import { DiscordFetch, embed } from "../../../utils/discord";
 import { haveLocale, Locales } from "../../../locales";
@@ -14,28 +14,95 @@ export default {
     description: "Set options on the bot",
     options: [
         {
-            type: 3,
-            name: "option",
-            description: "The option to set",
-            autocomplete: true,
+            type: 1,
+            name: "category",
+            description: "The category channel for tickets to be created in",
+            options: [
+                {
+                    type: 7,
+                    name: "value",
+                    description: "The category channel",
+                    required: true
+                }
+            ]
         },
         {
-            type: 3,
-            name: "value",
-            description: "The value to set the option to",
+            type: 1,
+            name: "log channel",
+            description: "The channel for logs to be sent to",
+            options: [
+                {
+                    type: 7,
+                    name: "value",
+                    description: "The log channel",
+                    required: true
+                }
+            ]
         },
+        {
+            type: 1,
+            name: "mod role",
+            description: "The moderator role that should be added to tickets",
+            options: [
+                {
+                    type: 8,
+                    name: "value",
+                    description: "The mod role",
+                    required: true
+                }
+            ]
+        },
+        {
+            type: 1,
+            name: "message",
+            description: "The custom message to be sent when a ticket is created, there is already a default message so you don't have to set this",
+            options: [
+                {
+                    type: 3,
+                    name: "value",
+                    description: "The message",
+                    required: true
+                }
+            ]
+        },
+        {
+            type: 1,
+            name: "ping mods",
+            description: "Whether to ping mods in the ticket channel when it is created",
+            options: [
+                {
+                    type: 5,
+                    name: "value",
+                    description: "True for pinging mods, false for not",
+                    required: true
+                }
+            ]
+        },
+        {
+            type: 1,
+            name: "locale",
+            description: "The language to use for the bot",
+            options: [
+                {
+                    type: 3,
+                    name: "value",
+                    description: "The language",
+                    required: true
+                }
+            ]
+        }
     ],
     default_member_permissions: PermissionFlagsBits.ManageGuild,
     contexts: [0],
     run: async (interaction, _, userLocale) => {
         if (!interaction.guildId) return;
-        const option = interaction.options.getString("option");
-        const value = interaction.options.getString("value");
+        const subCommand = interaction.options.getSubcommand();
         const server = (await getServer(interaction.guildId)) ?? {
             category: null,
             log_channel: null,
             mod_role: null,
             message: null,
+            ping_mods: false,
             locale: haveLocale(formatLocale(interaction.guildLocale))
                 ? formatLocale(interaction.guildLocale)
                 : "en",
@@ -72,163 +139,60 @@ export default {
                     };
                 }),
             );
-        if (!option || !value) {
+        if (!subCommand) {
             return await interaction.reply({ embeds: [standard] });
         }
-        const englishLocale = new Locales();
-        if (
-            !Object.keys(
-                englishLocale.getObject(
-                    (lang) => lang.config.config_option_names,
-                ),
-            ).includes(option)
-        ) {
-            return await interaction.reply({
-                content: userLocale.get((lang) => lang.config.invalid_option),
-            });
-        }
+
+        const value = interaction.options.getString("value", true);
         if(value === 'null' || value === 'none') {
-            await db.update(servers).set({ [option]: null }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
+            await db.update(servers).set({ [subCommand.replace(" ", "_")]: null }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
         }
-        switch (option) {
-            case "category": {
-                const category = value;
-                const channel = await new DiscordFetch(
-                    interaction.client,
-                ).channel(category);
-                if (!channel || channel.type !== 4) {
-                    return await interaction.reply({
-                        content: userLocale.get(
-                            (lang) => lang.config.invalid_value,
-                        ),
-                    });
-                }
-                if (
-                    channel
-                        .permissionsFor(interaction.client.user.id)
-                        ?.has(PermissionFlagsBits.ManageChannels) === false
-                ) {
-                    return await interaction.reply({
-                        content: userLocale.get(
-                            (lang) => lang.config.no_access_create,
-                        ),
-                    });
-                }
-                await db
-                    .insert(servers)
-                    .values({ id: interaction.guildId, category })
-                    .onConflictDoUpdate({
-                        target: servers.id,
-                        set: { category },
-                    });
-                break;
-            }
-            case "log_channel": {
-                const logChannel = value.replace("<#", "").replace(">", "");
-                const channel = await new DiscordFetch(
-                    interaction.client,
-                ).channel(logChannel);
-                if (!channel || !channel.isTextBased() || channel.isDMBased()) {
-                    return await interaction.reply({
-                        content: userLocale.get(
-                            (lang) => lang.config.invalid_value,
-                        ),
-                    });
-                }
-                if (
-                    channel
-                        .permissionsFor(interaction.client.user.id)
-                        ?.has(PermissionFlagsBits.SendMessages) === false
-                ) {
-                    return await interaction.reply({
-                        content: userLocale.get(
-                            (lang) => lang.config.no_access_send,
-                        ),
-                    });
-                }
-                await db
-                    .insert(servers)
-                    .values({
-                        id: interaction.guildId,
-                        log_channel: logChannel,
-                    })
-                    .onConflictDoUpdate({
-                        target: servers.id,
-                        set: { log_channel: logChannel },
-                    });
-                break;
-            }
-            case "mod_role": {
-                const role = value.replace("<@&", "").replace(">", "");
-                const role_ = await new DiscordFetch(interaction.client).role(
-                    interaction.guildId,
-                    role,
-                );
-                if (!role_) {
-                    return await interaction.reply({
-                        content: userLocale.get(
-                            (lang) => lang.config.invalid_value,
-                        ),
-                    });
-                }
-                await db
-                    .insert(servers)
-                    .values({ id: interaction.guildId, mod_role: role })
-                    .onConflictDoUpdate({
-                        target: servers.id,
-                        set: { mod_role: role },
-                    });
-                break;
-            }
-            case "message": {
-                await db
-                    .insert(servers)
-                    .values({ id: interaction.guildId, message: value })
-                    .onConflictDoUpdate({
-                        target: servers.id,
-                        set: { message: value },
-                    });
-                break;
-            }
+
+        switch (subCommand) {
             case "locale": {
-                if (!Object.keys(languages).includes(value)) {
+                if (!haveLocale(value)) {
                     return await interaction.reply({
-                        content: userLocale.get(
-                            (lang) => lang.config.invalid_value,
-                        ),
+                        content: userLocale.get((lang) => lang.config.invalid_value),
                     });
                 }
-                const valueTyped = value as Languages;
-                await db
-                    .insert(servers)
-                    .values({ id: interaction.guildId, locale: valueTyped })
-                    .onConflictDoUpdate({
-                        target: servers.id,
-                        set: { locale: valueTyped },
-                    });
+                await db.update(servers).set({ locale: value as Languages }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
                 break;
             }
-            case "ping_mods": {
-                if (value !== "true" && value !== "false") {
+            case "category": {
+                const channel = await new DiscordFetch(interaction.client).channel(value);
+                if(!channel || channel.type !== ChannelType.GuildCategory) {
                     return await interaction.reply({
-                        content: userLocale.get(
-                            (lang) => lang.config.invalid_value,
-                        ),
+                        content: userLocale.get((lang) => lang.config.invalid_value),
                     });
                 }
-                await db
-                    .insert(servers)
-                    .values({
-                        id: interaction.guildId,
-                        ping_mods: value === "true",
-                    })
-                    .onConflictDoUpdate({
-                        target: servers.id,
-                        set: { ping_mods: value === "true" },
-                    });
+                await db.update(servers).set({ category: value }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
                 break;
+            }
+            case "log channel": {
+                const channel = await new DiscordFetch(interaction.client).channel(value);
+                if(!channel || channel.type !== ChannelType.GuildText) {
+                    return await interaction.reply({
+                        content: userLocale.get((lang) => lang.config.invalid_value),
+                    });
+                }
+                await db.update(servers).set({ log_channel: value }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
+                break;
+            }
+            case "mod role": {
+                const role = await new DiscordFetch(interaction.client).role(interaction.guildId, value);
+                if(!role || !role.editable) {
+                    return await interaction.reply({
+                        content: userLocale.get((lang) => lang.config.invalid_value),
+                    });
+                }
+                await db.update(servers).set({ mod_role: value }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
+                break;
+            }
+            default: {
+                await db.update(servers).set({ [subCommand.replace(" ", "_")]: value }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
             }
         }
+
         await interaction.reply({
             content: userLocale.get((lang) => lang.config.success),
         });
