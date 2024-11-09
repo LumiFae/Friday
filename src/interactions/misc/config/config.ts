@@ -1,10 +1,10 @@
-import { CategoryChannel, ChannelType, PermissionFlagsBits } from "discord.js";
+import { ChannelType, PermissionFlagsBits } from "discord.js";
 import { Command } from "../../../types/discord";
 import { DiscordFetch, embed } from "../../../utils/discord";
-import { haveLocale, Locales } from "../../../locales";
+import { haveLocale } from "../../../locales";
 import { db, getServer } from "../../../db";
 import { servers } from "../../../schema";
-import { languages, formatLocale } from "../../../locales";
+import { formatLocale } from "../../../locales";
 import type { Languages } from "../../../schema";
 import { eq } from "drizzle-orm";
 
@@ -28,7 +28,7 @@ export default {
         },
         {
             type: 1,
-            name: "log channel",
+            name: "log-channel",
             description: "The channel for logs to be sent to",
             options: [
                 {
@@ -41,7 +41,7 @@ export default {
         },
         {
             type: 1,
-            name: "mod role",
+            name: "mod-role",
             description: "The moderator role that should be added to tickets",
             options: [
                 {
@@ -55,7 +55,7 @@ export default {
         {
             type: 1,
             name: "message",
-            description: "The custom message to be sent when a ticket is created, there is already a default message so you don't have to set this",
+            description: "Change this to edit the default message sent when a ticket is created",
             options: [
                 {
                     type: 3,
@@ -67,7 +67,7 @@ export default {
         },
         {
             type: 1,
-            name: "ping mods",
+            name: "ping-mods",
             description: "Whether to ping mods in the ticket channel when it is created",
             options: [
                 {
@@ -145,7 +145,7 @@ export default {
 
         const value = interaction.options.getString("value", true);
         if(value === 'null' || value === 'none') {
-            await db.update(servers).set({ [subCommand.replace(" ", "_")]: null }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
+            await db.update(servers).set({ [subCommand.replace("-", "_")]: null }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
         }
 
         switch (subCommand) {
