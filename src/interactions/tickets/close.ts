@@ -144,7 +144,7 @@ async function fetchMessages(channel: TextChannel) {
 }
 
 async function generateTranscript(channel: TextChannel) {
-    const messages = await fetchMessages(channel);
+    const messages = (await fetchMessages(channel)).reverse();
     let transcript: string[] = [];
     for(const message of messages) {
         const author = message.author;
