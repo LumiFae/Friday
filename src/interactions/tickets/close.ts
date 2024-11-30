@@ -121,15 +121,15 @@ export default {
                               "None Provided",
                       )
                     : replacement(
-                          serverLocale.get(
-                              (lang) => lang.close.embeds.description_user,
-                          ),
-                            String(ticketChannel.ticketNo),
-                          `<@${interaction.user.id}>`,
-                          `<@${ticketChannel.created_by}>`,
-                          interaction.options.getString("reason") ||
-                              serverLocale.get((lang) => lang.close.no_reason),
-                      ),
+                        serverLocale.get(
+                            (lang) => lang.close.embeds.description_user,
+                        ),
+                        `\`${String(ticketChannel.ticketNo)}\``,
+                        `<@${ticketChannel.created_by}>`,
+                        `<@${interaction.user.id}>`,
+                        interaction.options.getString("reason") ||
+                            serverLocale.get((lang) => lang.close.no_reason),
+                        ),
             );
         await logChannel.send({ embeds: [embed], files: [attachment] });
     },
