@@ -59,8 +59,8 @@ export default {
                               (lang) => lang.delete.embeds.description_user,
                           ),
                         `\`${ticketChannel.ticketNo}\``,
-                          `<@${interaction.user.id}>`,
-                          `<@${ticketChannel.created_by}>`,
+                        `<@${ticketChannel.created_by}>`,
+                        `<@${interaction.user.id}>`,
                       ),
             );
         await logChannel.send({ embeds: [embed] });
