@@ -177,9 +177,11 @@ export default function (app: Express, client: Client) {
                     break;
                 }
                 case "server": {
+                    const tagRemoveRegex = /<[^>]+>/g;
+                    const uselessTextRemove = /<color=#00000000>(.*?)<\/color>/g;
                     embedFields.push({
                         name: value,
-                        value: body.serverName ?? "Unknown"
+                        value: body.serverName.replace(uselessTextRemove, "").replace(tagRemoveRegex, "") ?? "Unknown"
                     });
                 }
             }
