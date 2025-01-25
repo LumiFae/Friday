@@ -86,7 +86,12 @@ export default function (app: Express, client: Client) {
                     created_by: discordUserId?.id || null,
                     server: server.id,
                     steamid: body.reporterId,
-                    ticketNo: server.lastTicketNo+1
+                    ticketNo: server.lastTicketNo+1,
+                    metadata: {
+                        reason: body.reason,
+                        reported: body.reportedId,
+                        serverName: body.serverName,
+                    }
                 })
                 .returning()
                 .execute()
