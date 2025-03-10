@@ -145,6 +145,9 @@ export default {
 
         if(subCommand === "ping-mods") {
             await db.update(servers).set({ ping_mods: interaction.options.getBoolean("value", true) }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
+            await interaction.reply({
+                content: userLocale.get((lang) => lang.config.success),
+            });
             return;
         }
 
