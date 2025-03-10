@@ -151,7 +151,7 @@ export default {
             embed.addFields(
                 {
                     name: serverLocale.get(
-                        (lang) => lang.ticket.embeds.field_names.reason,
+                        (lang) => lang.close.ticket_reason_metadata,
                     ),
                     value: `\`${ticketChannel.metadata.reason}\``,
                 },

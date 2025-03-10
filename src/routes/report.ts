@@ -79,6 +79,10 @@ export default function (app: Express, client: Client) {
         )
             discordUserId = null;
 
+        const tagRemoveRegex = /<[^>]+>/g;
+        const uselessTextRemove = /<color=#00000000>(.*?)<\/color>/g;
+        const serverNameParsed = body.serverName.replace(uselessTextRemove, "").replace(tagRemoveRegex, "") ?? "Unknown"
+
         const ticketInfo = (
             await db
                 .insert(tickets)
@@ -90,7 +94,7 @@ export default function (app: Express, client: Client) {
                     metadata: {
                         reason: body.reason,
                         reported: body.reportedId,
-                        serverName: body.serverName,
+                        serverName: serverNameParsed,
                     }
                 })
                 .returning()
@@ -157,6 +161,7 @@ export default function (app: Express, client: Client) {
         const embedFieldNames = serverLocale.getObject(
             (lang) => lang.ticket.embeds.field_names,
         );
+
         for (const field of Object.keys(embedFieldNames)) {
             const value = embedFieldNames[field];
             switch (field) {
@@ -182,11 +187,9 @@ export default function (app: Express, client: Client) {
                     break;
                 }
                 case "server": {
-                    const tagRemoveRegex = /<[^>]+>/g;
-                    const uselessTextRemove = /<color=#00000000>(.*?)<\/color>/g;
                     embedFields.push({
                         name: value,
-                        value: body.serverName.replace(uselessTextRemove, "").replace(tagRemoveRegex, "") ?? "Unknown"
+                        value: serverNameParsed
                     });
                 }
             }
