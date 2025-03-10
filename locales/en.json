@@ -70,7 +70,7 @@
                 "user": "User",
                 "reason": "Reason",
                 "reporter": "Reporter",
-                "server": "Server Name",
+                "server": "Server Name"
             },
             "no_user": "Not found"
         }
