@@ -143,6 +143,11 @@ export default {
             return await interaction.reply({ embeds: [standard] });
         }
 
+        if(subCommand === "ping-mods") {
+            await db.update(servers).set({ ping_mods: interaction.options.getBoolean("value", true) }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
+            return;
+        }
+
         const value = interaction.options.getString("value", true);
         if(value === 'null' || value === 'none') {
             await db.update(servers).set({ [subCommand.replace("-", "_")]: null }).where(eq(servers.id, interaction.guildId)).execute().catch(() => null);
