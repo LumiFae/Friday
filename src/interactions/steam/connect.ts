@@ -17,7 +17,7 @@ export default {
             .setStyle(ButtonStyle.Link)
             .setLabel("Connect")
             .setURL(
-                `https://friday.jxtq.moe/auth?clientid=${user.secondary_id}`,
+                `https://${process.env.FQDN}/auth?clientid=${user.secondary_id}`,
             );
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
             linkButton,
