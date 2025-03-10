@@ -5,7 +5,7 @@ import { Command } from "../../types/discord";
 import { db, getServer } from "../../db";
 import { tickets } from "../../schema";
 import { eq, sql } from "drizzle-orm";
-import { embed as embed_ } from "../../utils/discord";
+import { embed as embed_, hasModRole } from "../../utils/discord";
 import { replacement } from "../../locales";
 
 export default {
@@ -24,7 +24,8 @@ export default {
     run: async (interaction, serverLocale, userLocale) => {
         if (!interaction.guildId || !interaction.channel) return;
         const server = await getServer(interaction.guildId);
-        if (!server) return;
+        if (!server || !server.mod_role || !interaction.member) return;
+        if(!hasModRole(interaction, server.mod_role)) return interaction.reply(userLocale.get((lang) => lang.no_permission))
         const ticketChannel = (
             await db
                 .select()

@@ -1,4 +1,14 @@
-import { Client, EmbedBuilder, Channel, TextChannel, NewsChannel, Snowflake, Collection, Message } from "discord.js";
+import {
+    Client,
+    EmbedBuilder,
+    Channel,
+    TextChannel,
+    NewsChannel,
+    Snowflake,
+    Collection,
+    Message,
+    ChatInputCommandInteraction, GuildMemberRoleManager, CacheType
+} from "discord.js";
 
 export function embed() {
     return new EmbedBuilder().setColor("#0099ff");
@@ -77,4 +87,13 @@ export async function fetchChannel(client: Client, channelID: string | Fetchable
         messages = messages.concat(Array.from(fetchedMessages.values()));
         lastID = fetchedMessages.lastKey();
     }
+}
+
+export function hasModRole(interaction: ChatInputCommandInteraction<CacheType>, modRoleId: string) {
+    if(!interaction.member) return false;
+    if (interaction.member.roles instanceof GuildMemberRoleManager && !interaction.member.roles.cache.has(modRoleId))
+        return false;
+    else if (Array.isArray(interaction.member.roles) && !interaction.member.roles.includes(modRoleId))
+        return false;
+    return true;
 }

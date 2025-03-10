@@ -1,4 +1,4 @@
-import { AttachmentBuilder, TextChannel } from "discord.js";
+import { AttachmentBuilder, GuildMemberRoleManager, TextChannel } from "discord.js";
 import { Command } from "../../types/discord";
 import { db, getLocale, getServer } from "../../db";
 import { tickets } from "../../schema";
@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import {
     DiscordFetch,
     embed as embed_,
-    fetchChannel,
+    fetchChannel, hasModRole
 } from "../../utils/discord";
 import { Locales, replacement } from "../../locales";
 
@@ -27,7 +27,11 @@ export default {
         await interaction.deferReply();
         if (!interaction.guildId || !interaction.channel) return;
         const server = await getServer(interaction.guildId);
-        if (!server) return;
+        if (!server || !server.mod_role || !interaction.member) return;
+        if(!server.mod_role) return;
+
+        if(!hasModRole(interaction, server.mod_role)) return interaction.reply(userLocale.get((lang) => lang.no_permission))
+
         const ticketChannel = (
             await db
                 .select()
