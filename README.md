@@ -43,6 +43,13 @@ To disconnect your Steam account from Discord, you must run the command `/discon
 - `/delete` - Delete a ticket
 - `/removeuser` - Remove a user from a ticket
 
+## Locales
+
+As of writing, there is only English support, but if you wanted to add your own, copy the `en.json` from `locales` and paste it as a copy, rename it
+to the locale code of what language you are editing for and then change the translations yourself. You will then have to change
+the language type in `src/schema.ts` to include your language code. After you deploy, or make a pull request, the bot should get
+access to your newly added language whenever it merges/gets deployed.
+
 ## Privacy Concerns
 
 Friday stores no personal information about you. All information stored for Friday is stored safely and none of the contents will be given to a third party, unless there is a legal order.
