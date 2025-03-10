@@ -91,9 +91,9 @@ export async function fetchChannel(client: Client, channelID: string | Fetchable
 
 export function hasModRole(interaction: ChatInputCommandInteraction<CacheType>, modRoleId: string) {
     if(!interaction.member) return false;
-    if (interaction.member.roles instanceof GuildMemberRoleManager && !interaction.member.roles.cache.has(modRoleId))
+    if (interaction.inCachedGuild() && !interaction.member.roles.cache.has(modRoleId))
         return false;
-    else if (Array.isArray(interaction.member.roles) && !interaction.member.roles.includes(modRoleId))
+    else if (interaction.inRawGuild() && !interaction.member.roles.includes(modRoleId))
         return false;
     return true;
 }
