@@ -28,6 +28,31 @@ if everything worked well, it will say so.
 
 To disconnect your Steam account from Discord, you must run the command `/disconnect` in the Discord server.
 
+## Commands
+
+- `/config` - To configure your server
+- `/help` - To get all the commands
+- `/settings` - To change your user settings
+- `/discord` - To get the support Discord's invite link
+- `/profile` - To get yours or another person's profile
+- `/setup` - To set up the Discord server
+- `/connect` - Connect your Steam account to Discord
+- `/disconnect` - Disconnect your existing Steam account connection
+- `/adduser` - Add a user to a ticket
+- `/close` - Close a ticket
+- `/delete` - Delete a ticket
+- `/removeuser` - Remove a user from a ticket
+
 ## Privacy Concerns
 
 Friday stores no personal information about you. All information stored for Friday is stored safely and none of the contents will be given to a third party, unless there is a legal order.
+
+## Self Hosting
+
+Download this GitHub repository and make your Discord bot, if you don't know how to do that, then I would recommend not doing this.
+If you do know how to then copy the `.env.example` file into a `.env` file and edit all the values correctly.
+
+You will need a PostgreSQL database for this.
+
+Install all the NPM dependencies and then start the bot with `npm start`, if you have all the `.env` variables correct
+the bot will start.
