@@ -27,10 +27,7 @@ export default {
         await interaction.deferReply();
         if (!interaction.guildId || !interaction.channel) return;
         const server = await getServer(interaction.guildId);
-        if (!server || !server.mod_role || !interaction.member) return;
-        if(!server.mod_role) return;
-
-        if(!hasModRole(interaction, server.mod_role)) return interaction.reply(userLocale.get((lang) => lang.no_permission))
+        if (!server) return;
 
         const ticketChannel = (
             await db
