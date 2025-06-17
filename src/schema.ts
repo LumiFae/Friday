@@ -1,4 +1,12 @@
-import { boolean, pgTable, serial, text, uuid, integer, jsonb } from "drizzle-orm/pg-core";
+import {
+    boolean,
+    pgTable,
+    serial,
+    text,
+    uuid,
+    integer,
+    jsonb,
+} from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 export type Languages = "en" | null;
@@ -20,13 +28,14 @@ export const servers = pgTable("servers", {
     locale: text("locale").$type<Languages>(),
     token: text("token").unique(),
     lastTicketNo: integer("lastTicketNo").notNull().default(0),
+    ingame_ticket_thread: text("ingame_ticket_thread"),
 });
 
 export type TicketMetadata = {
     reason: string;
     reported: string;
     serverName: string;
-}
+};
 
 export const tickets = pgTable("tickets", {
     id: serial("id").primaryKey(),
@@ -40,6 +49,5 @@ export const tickets = pgTable("tickets", {
         .default(sql`'{}'::text[]`),
     channelId: text("channelId").unique(),
     closed: boolean("closed").notNull().default(false),
-    metadata: jsonb("metadata").$type<TicketMetadata>()
+    metadata: jsonb("metadata").$type<TicketMetadata>(),
 });
-
