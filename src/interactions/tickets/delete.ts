@@ -1,6 +1,4 @@
-import {
-    TextChannel,
-} from "discord.js";
+import { TextChannel, ChannelType } from "discord.js";
 import { Command } from "../../types/discord";
 import { db, getServer } from "../../db";
 import { tickets } from "../../schema";
@@ -17,8 +15,14 @@ export default {
         if (!interaction.guildId || !interaction.channel) return;
         const server = await getServer(interaction.guildId);
         if (!server || !server.mod_role || !interaction.member) return;
-        if(!hasModRole(interaction, server.mod_role)) return interaction.reply(userLocale.get((lang) => lang.no_permission))
-        const ticketChannel = await db.query.tickets.findFirst({ where: eq(tickets.channelId, interaction.channelId) }).execute().catch(() => undefined);
+        if (!hasModRole(interaction, server.mod_role))
+            return interaction.reply(
+                userLocale.get((lang) => lang.no_permission),
+            );
+        const ticketChannel = await db.query.tickets
+            .findFirst({ where: eq(tickets.channelId, interaction.channelId) })
+            .execute()
+            .catch(() => undefined);
         if (
             !ticketChannel ||
             ticketChannel.closed !== true ||
@@ -31,9 +35,12 @@ export default {
         }
         await interaction.reply(userLocale.get((lang) => lang.delete.deleting));
         try {
-            await interaction.channel.delete()
+            await interaction.channel.delete();
         } catch (_) {
-            return await interaction.reply({ content: userLocale.get((lang) => lang.delete.no_permissions), ephemeral: true });
+            return await interaction.reply({
+                content: userLocale.get((lang) => lang.delete.no_permissions),
+                ephemeral: true,
+            });
         }
         await db
             .delete(tickets)
@@ -59,11 +66,41 @@ export default {
                           serverLocale.get(
                               (lang) => lang.delete.embeds.description_user,
                           ),
-                        `\`${ticketChannel.ticketNo}\``,
-                        `<@${ticketChannel.created_by}>`,
-                        `<@${interaction.user.id}>`,
+                          `\`${ticketChannel.ticketNo}\``,
+                          `<@${ticketChannel.created_by}>`,
+                          `<@${interaction.user.id}>`,
                       ),
             );
-        await logChannel.send({ embeds: [embed] });
+        // @NotKeira - Start
+        // --- Ingame ticket thread logging ---
+        let thread;
+        if (
+            logChannel.type === ChannelType.GuildText ||
+            logChannel.type === ChannelType.GuildAnnouncement
+        ) {
+            // Try to find thread by ID or name from config
+            thread =
+                logChannel.threads.cache.get(server.ingame_ticket_thread!) ||
+                logChannel.threads.cache.find(
+                    (t) =>
+                        t.name === server.ingame_ticket_thread && !t.archived,
+                );
+            if (!thread) {
+                thread = await logChannel.threads.create({
+                    name: server.ingame_ticket_thread || "Ingame SCP Tickets",
+                    autoArchiveDuration: 1440,
+                    reason: `Ticket logs for ingame tickets`,
+                });
+            }
+        }
+        // --- End thread logic ---
+        if (thread) {
+            await thread.send({ embeds: [embed] });
+        } else if (
+            logChannel.type === ChannelType.GuildText ||
+            logChannel.type === ChannelType.GuildAnnouncement
+        ) {
+            await logChannel.send({ embeds: [embed] });
+        }
     },
 } satisfies Command;

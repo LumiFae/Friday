@@ -1,4 +1,9 @@
-import { AttachmentBuilder, GuildMemberRoleManager, TextChannel } from "discord.js";
+import {
+    AttachmentBuilder,
+    GuildMemberRoleManager,
+    TextChannel,
+    ChannelType,
+} from "discord.js";
 import { Command } from "../../types/discord";
 import { db, getLocale, getServer } from "../../db";
 import { tickets } from "../../schema";
@@ -6,7 +11,8 @@ import { eq } from "drizzle-orm";
 import {
     DiscordFetch,
     embed as embed_,
-    fetchChannel, hasModRole
+    fetchChannel,
+    hasModRole,
 } from "../../utils/discord";
 import { Locales, replacement } from "../../locales";
 
@@ -124,6 +130,30 @@ export default {
             server.log_channel,
         );
         if (!logChannel || !logChannel.isTextBased()) return;
+
+        // @NotKeira - Start
+        // --- Ingame ticket thread logging ---
+        let thread;
+        if (
+            logChannel.type === ChannelType.GuildText ||
+            logChannel.type === ChannelType.GuildAnnouncement
+        ) {
+            // Try to find thread by ID or name from config
+            thread =
+                logChannel.threads.cache.get(server.ingame_ticket_thread!) ||
+                logChannel.threads.cache.find(
+                    (t) =>
+                        t.name === server.ingame_ticket_thread && !t.archived,
+                );
+            if (!thread) {
+                thread = await logChannel.threads.create({
+                    name: server.ingame_ticket_thread || "Ingame SCP Tickets",
+                    autoArchiveDuration: 1440,
+                    reason: `Ticket logs for ingame tickets`,
+                });
+            }
+        }
+        // --- End thread logic ---
         const embed = embed_()
             .setTitle(serverLocale.get((lang) => lang.close.embeds.title))
             .setDescription(
@@ -177,7 +207,14 @@ export default {
                     value: `\`${ticketChannel.metadata.serverName}\``,
                 },
             );
-        await logChannel.send({ embeds: [embed], files: [attachment] });
+        if (thread) {
+            await thread.send({ embeds: [embed], files: [attachment] });
+        } else if (
+            logChannel.type === ChannelType.GuildText ||
+            logChannel.type === ChannelType.GuildAnnouncement
+        ) {
+            await logChannel.send({ embeds: [embed], files: [attachment] });
+        }
     },
 } satisfies Command;
 
