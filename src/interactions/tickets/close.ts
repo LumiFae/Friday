@@ -1,4 +1,9 @@
-import { AttachmentBuilder, GuildMemberRoleManager, TextChannel } from "discord.js";
+import {
+    AttachmentBuilder,
+    GuildMemberRoleManager,
+    TextChannel,
+    ChannelType,
+} from "discord.js";
 import { Command } from "../../types/discord";
 import { db, getLocale, getServer } from "../../db";
 import { tickets } from "../../schema";
@@ -6,7 +11,8 @@ import { eq } from "drizzle-orm";
 import {
     DiscordFetch,
     embed as embed_,
-    fetchChannel, hasModRole
+    fetchChannel,
+    hasModRole,
 } from "../../utils/discord";
 import { Locales, replacement } from "../../locales";
 
@@ -124,6 +130,34 @@ export default {
             server.log_channel,
         );
         if (!logChannel || !logChannel.isTextBased()) return;
+
+        // @NotKeira - Start
+        // --- Ticket type thread logging ---
+        let threadName = "General";
+        if (ticketChannel.metadata && ticketChannel.metadata.reason) {
+            threadName = ticketChannel.metadata.reason;
+        }
+        let thread;
+        if (
+            logChannel.type === ChannelType.GuildText ||
+            logChannel.type === ChannelType.GuildAnnouncement
+        ) {
+            // @ts-ignore
+            thread = logChannel.threads.cache.find(
+                (t) => t.name === threadName && !t.archived,
+            );
+            if (!thread) {
+                // @ts-ignore
+                thread = await logChannel.threads.create({
+                    name: threadName,
+                    autoArchiveDuration: 1440, // 24 * 60 mins btw
+                    reason: `Ticket logs for type: ${threadName}`,
+                });
+            }
+        }
+        // @NotKeira - End
+        // --- End of the thread logic shit ---
+
         const embed = embed_()
             .setTitle(serverLocale.get((lang) => lang.close.embeds.title))
             .setDescription(
@@ -177,7 +211,14 @@ export default {
                     value: `\`${ticketChannel.metadata.serverName}\``,
                 },
             );
-        await logChannel.send({ embeds: [embed], files: [attachment] });
+        if (thread) {
+            await thread.send({ embeds: [embed], files: [attachment] });
+        } else if (
+            logChannel.type === ChannelType.GuildText ||
+            logChannel.type === ChannelType.GuildAnnouncement
+        ) {
+            await logChannel.send({ embeds: [embed], files: [attachment] });
+        }
     },
 } satisfies Command;
 
